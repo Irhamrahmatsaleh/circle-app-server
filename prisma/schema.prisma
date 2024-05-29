@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  username      String    @unique
+  email         String    @unique
+  name          String
+  password      String
+  avatar        String?
+  bio           String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  vibes         Vibe[]    @relation("UserVibes")
+  replies       Reply[]   @relation("UserReplies")
+  likes         Like[]    @relation("UserLikes")
+  Followings    Follow[]  @relation("UserFollowing")
+  Followers     Follow[]  @relation("UserFollowers")
+
+  @@map("users")
+}
+
+model Vibe {
+  id            Int       @id @default(autoincrement())
+  content       String
+  image         String?
+  totalReply    Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  author        User      @relation(fields: [authorId], references: [id], name: "UserVibes")
+  authorId      Int
+
+  replies       Reply[]   @relation("VibeReplies")
+  likes         Like[]    @relation("VibeLikes")
+
+  @@map("vibes")
+}
+
+model Reply {
+  id          Int       @id @default(autoincrement())
+  image       String?
+  content     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  repliedBy   User      @relation(fields: [authorId], references: [id], name: "UserReplies")
+  authorId    Int
+  replies     Vibe      @relation(fields: [vibeId], references: [id], name: "VibeReplies")
+  vibeId      Int
+
+  @@map("replies")
+}
+
+model Like {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  likedBy     User      @relation(fields: [authorId], references: [id], name: "UserLikes")
+  authorId    Int
+  likes       Vibe      @relation(fields: [vibeId], references: [id], name: "VibeLikes")
+  vibeId      Int
+
+  @@map("likes")
+}
+
+model Follow {
+  id            Int       @id @default(autoincrement())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  following     User      @relation(fields: [followingId], references: [id], name: "UserFollowing")
+  followingId   Int
+  followers     User      @relation(fields: [followerId], references: [id], name: "UserFollowers")
+  followerId    Int
+
+  @@map("follows")
+}
