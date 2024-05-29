@@ -10,7 +10,7 @@ class VibeControllers {
         const { error, payload }: ServiceResponseDTO<VibeType[]> = await VibeServices.getVibes()
 
         if (error) {
-            res.status(500).json(
+            return res.status(500).json(
                 new ResponseDTO<null>({
                     error,
                     message: payload,
@@ -19,7 +19,7 @@ class VibeControllers {
             )
         }
 
-        res.status(200).json(
+        return res.status(200).json(
             new ResponseDTO<VibeType>({
                 error,
                 message: {
@@ -37,7 +37,7 @@ class VibeControllers {
         )
 
         if (error) {
-            res.status(500).json(
+            return res.status(500).json(
                 new ResponseDTO<null>({
                     error,
                     message: payload,
@@ -46,7 +46,7 @@ class VibeControllers {
             )
         }
 
-        res.status(200).json(
+        return res.status(200).json(
             new ResponseDTO<VibeType>({
                 error,
                 message: {
@@ -65,7 +65,7 @@ class VibeControllers {
         )
 
         if (error) {
-            res.status(500).json(
+            return res.status(500).json(
                 new ResponseDTO<null>({
                     error,
                     message: payload,
@@ -74,7 +74,34 @@ class VibeControllers {
             )
         }
 
-        res.status(200).json(
+        return res.status(200).json(
+            new ResponseDTO<VibeType>({
+                error,
+                message: {
+                    status: 'Ok!',
+                },
+                data: payload,
+            })
+        )
+    }
+
+    async deleteVibe(req: Request, res: Response) {
+        const { id } = req.params
+        const { error, payload }: ServiceResponseDTO<VibeType> = await VibeServices.deleteVibe(
+            Number(id)
+        )
+
+        if (error) {
+            return res.status(500).json(
+                new ResponseDTO<null>({
+                    error,
+                    message: payload,
+                    data: null,
+                })
+            )
+        }
+
+        return res.status(200).json(
             new ResponseDTO<VibeType>({
                 error,
                 message: {

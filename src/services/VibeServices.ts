@@ -16,7 +16,7 @@ class VibeServices {
             })
         } catch (error) {
             return new ServiceResponseDTO({
-                error: false,
+                error: true,
                 payload: error,
             })
         }
@@ -24,7 +24,7 @@ class VibeServices {
 
     async getVibe(id: number): Promise<ServiceResponseDTO<VibeType>> {
         try {
-            const vibe = await prisma.vibe.findUnique({
+            const requestedVibe = await prisma.vibe.findUnique({
                 where: {
                     id: id,
                 },
@@ -32,11 +32,11 @@ class VibeServices {
 
             return new ServiceResponseDTO<VibeType>({
                 error: false,
-                payload: vibe,
+                payload: requestedVibe,
             })
         } catch (error) {
             return new ServiceResponseDTO({
-                error: false,
+                error: true,
                 payload: error,
             })
         }
@@ -44,13 +44,33 @@ class VibeServices {
 
     async postVibe(vibeDTO: VibeDTO): Promise<ServiceResponseDTO<VibeType>> {
         try {
-            const vibe = await prisma.vibe.create({
+            const postedVibe = await prisma.vibe.create({
                 data: vibeDTO,
             })
 
             return new ServiceResponseDTO<VibeType>({
                 error: false,
-                payload: vibe,
+                payload: postedVibe,
+            })
+        } catch (error) {
+            return new ServiceResponseDTO({
+                error: true,
+                payload: error,
+            })
+        }
+    }
+
+    async deleteVibe(id: number): Promise<ServiceResponseDTO<VibeType>> {
+        try {
+            const deletedVibes = await prisma.vibe.delete({
+                where: {
+                    id: id,
+                },
+            })
+
+            return new ServiceResponseDTO({
+                error: false,
+                payload: deletedVibes,
             })
         } catch (error) {
             return new ServiceResponseDTO({

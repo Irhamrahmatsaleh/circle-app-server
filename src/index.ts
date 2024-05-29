@@ -17,6 +17,7 @@ async function main() {
     v1MainRouter.get('/vibes', VibeControllers.getVibes)
     v1MainRouter.get('/vibe/:id', VibeControllers.getVibe)
     v1MainRouter.post('/vibes', VibeControllers.postVibes)
+    v1MainRouter.delete('/vibe/:id', VibeControllers.deleteVibe)
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)
