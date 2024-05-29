@@ -1,30 +1,33 @@
 import { PrismaClient } from '@prisma/client'
-import { Vibe, ServiceResponse } from '../types/types'
+import { VibeType, ServiceResponseType } from '../types/types'
+import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 
 const prisma = new PrismaClient()
 
 class VibeServices {
-    async getVibes(): Promise<ServiceResponse<Vibe[]>> {
+    async getVibes(): Promise<ServiceResponseType<VibeType[]>> {
         try {
             const vibes = await prisma.vibe.findMany()
 
-            return {
+            return new ServiceResponseDTO<VibeType[]>({
                 error: false,
                 message: {
                     status: 'Ok!',
                 },
                 data: vibes,
-            }
+            })
         } catch (error) {
-            return {
+            return new ServiceResponseDTO<null>({
                 error: true,
-                message: error,
+                message: {
+                    error: error,
+                },
                 data: null,
-            }
+            })
         }
     }
 
-    async getVibe(id: number): Promise<ServiceResponse<Vibe>> {
+    async getVibe(id: number): Promise<ServiceResponseType<VibeType>> {
         try {
             const vibe = await prisma.vibe.findUnique({
                 where: {
@@ -32,19 +35,21 @@ class VibeServices {
                 },
             })
 
-            return {
+            return new ServiceResponseDTO<VibeType>({
                 error: false,
                 message: {
                     status: 'Ok!',
                 },
                 data: vibe,
-            }
+            })
         } catch (error) {
-            return {
+            return new ServiceResponseDTO<null>({
                 error: true,
-                message: error,
+                message: {
+                    error: error,
+                },
                 data: null,
-            }
+            })
         }
     }
 }

@@ -1,4 +1,4 @@
-export interface User {
+export interface UserType {
     id: number
     username: string
     email: string
@@ -10,7 +10,7 @@ export interface User {
     updatedAt: Date
 }
 
-export interface Vibe {
+export interface VibeType {
     id: number
     content: string
     image: string
@@ -20,7 +20,13 @@ export interface Vibe {
     authorId: number
 }
 
-export interface ServiceResponse<T> {
+export interface VibeDTOType {
+    content: string
+    image?: string
+    authorId: number
+}
+
+export interface ServiceResponseType<T> {
     error: boolean
     message: object
     data: T | null

@@ -10,6 +10,7 @@ const v1MainRouter = express.Router()
 const port = 8787
 
 app.use(cors())
+app.use(express.json())
 app.use('/v1', v1MainRouter)
 
 async function main() {
