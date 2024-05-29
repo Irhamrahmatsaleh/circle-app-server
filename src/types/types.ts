@@ -1,4 +1,4 @@
-export interface Vibe {
+export interface User {
     id: number
     username: string
     email: string
@@ -8,6 +8,16 @@ export interface Vibe {
     bio: string
     createdAt: Date
     updatedAt: Date
+}
+
+export interface Vibe {
+    id: number
+    content: string
+    image: string
+    totalReply: number
+    createdAt: Date
+    updatedAt: Date
+    authorId: number
 }
 
 export interface ServiceResponse<T> {
