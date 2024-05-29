@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { VibeType } from '../types/types'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import VibeDTO from '../dtos/VibeDTO'
+import CircleError from '../utils/CircleError'
 
 const prisma = new PrismaClient()
 
@@ -29,6 +30,10 @@ class VibeServices {
                     id: id,
                 },
             })
+
+            if (!requestedVibe) {
+                throw new CircleError({ error: 'Requested vibe does not exist.' })
+            }
 
             return new ServiceResponseDTO<VibeType>({
                 error: false,
