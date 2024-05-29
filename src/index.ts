@@ -6,13 +6,15 @@ import VibeControllers from './controllers/VibeControllers'
 const prisma = new PrismaClient()
 
 const app = express()
+const v1MainRouter = express.Router()
 const port = 8787
 
 app.use(cors())
+app.use('/v1', v1MainRouter)
 
 async function main() {
-    app.get('/vibes', VibeControllers.getVibes)
-    app.get('/vibe/:id', VibeControllers.getVibe)
+    v1MainRouter.get('/vibes', VibeControllers.getVibes)
+    v1MainRouter.get('/vibe/:id', VibeControllers.getVibe)
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)
