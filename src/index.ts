@@ -12,6 +12,7 @@ app.use(cors())
 
 async function main() {
     app.get('/vibes', VibeControllers.getVibes)
+    app.get('/vibe/:id', VibeControllers.getVibe)
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)
