@@ -1,33 +1,28 @@
 import { PrismaClient } from '@prisma/client'
-import { VibeType, ServiceResponseType } from '../types/types'
+import { VibeType } from '../types/types'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
+import VibeDTO from '../dtos/VibeDTO'
 
 const prisma = new PrismaClient()
 
 class VibeServices {
-    async getVibes(): Promise<ServiceResponseType<VibeType[]>> {
+    async getVibes(): Promise<ServiceResponseDTO<VibeType[]>> {
         try {
             const vibes = await prisma.vibe.findMany()
 
             return new ServiceResponseDTO<VibeType[]>({
                 error: false,
-                message: {
-                    status: 'Ok!',
-                },
-                data: vibes,
+                payload: vibes,
             })
         } catch (error) {
-            return new ServiceResponseDTO<null>({
-                error: true,
-                message: {
-                    error: error,
-                },
-                data: null,
+            return new ServiceResponseDTO({
+                error: false,
+                payload: error,
             })
         }
     }
 
-    async getVibe(id: number): Promise<ServiceResponseType<VibeType>> {
+    async getVibe(id: number): Promise<ServiceResponseDTO<VibeType>> {
         try {
             const vibe = await prisma.vibe.findUnique({
                 where: {
@@ -37,18 +32,30 @@ class VibeServices {
 
             return new ServiceResponseDTO<VibeType>({
                 error: false,
-                message: {
-                    status: 'Ok!',
-                },
-                data: vibe,
+                payload: vibe,
             })
         } catch (error) {
-            return new ServiceResponseDTO<null>({
+            return new ServiceResponseDTO({
+                error: false,
+                payload: error,
+            })
+        }
+    }
+
+    async postVibe(vibeDTO: VibeDTO): Promise<ServiceResponseDTO<VibeType>> {
+        try {
+            const vibe = await prisma.vibe.create({
+                data: vibeDTO,
+            })
+
+            return new ServiceResponseDTO<VibeType>({
+                error: false,
+                payload: vibe,
+            })
+        } catch (error) {
+            return new ServiceResponseDTO({
                 error: true,
-                message: {
-                    error: error,
-                },
-                data: null,
+                payload: error,
             })
         }
     }

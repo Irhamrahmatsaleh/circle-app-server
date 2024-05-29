@@ -19,15 +19,3 @@ export interface VibeType {
     updatedAt: Date
     authorId: number
 }
-
-export interface VibeDTOType {
-    content: string
-    image?: string
-    authorId: number
-}
-
-export interface ServiceResponseType<T> {
-    error: boolean
-    message: object
-    data: T | null
-}

@@ -1,14 +1,10 @@
-import { ServiceResponseType } from '../types/types'
-
 class ServiceResponseDTO<T> {
     error: boolean
-    message: object
-    data: T | null
+    payload: T | null
 
-    constructor({ error, message, data }: ServiceResponseType<T>) {
+    constructor({ error, payload }) {
         this.error = error
-        this.message = message
-        this.data = data
+        this.payload = payload
     }
 }
 
