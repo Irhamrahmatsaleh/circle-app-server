@@ -1,16 +1,14 @@
 import { Request, Response } from 'express'
-import { ReplyType } from '../types/types'
+import { LikeType } from '../types/types'
+import LikeServices from '../services/LikeServices'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
-import ReplyServices from '../services/ReplyServices'
 import ResponseDTO from '../dtos/ResponseDTO'
 
-class ReplyControllers {
-    async postReply(req: Request, res: Response) {
-        const { image, content, authorId, vibeId } = req.body
+class LikeControllers {
+    async addLike(req: Request, res: Response) {
+        const { authorId, vibeId } = req.body
 
-        const { error, payload }: ServiceResponseDTO<ReplyType> = await ReplyServices.postReply({
-            image,
-            content,
+        const { error, payload }: ServiceResponseDTO<LikeType> = await LikeServices.addLike({
             authorId,
             vibeId,
         })
@@ -26,10 +24,10 @@ class ReplyControllers {
         }
 
         return res.status(200).json(
-            new ResponseDTO<ReplyType>({
+            new ResponseDTO<LikeType>({
                 error,
                 message: {
-                    status: 'Reply posted!',
+                    status: 'Like added!',
                 },
                 data: payload,
             })
@@ -37,4 +35,4 @@ class ReplyControllers {
     }
 }
 
-export default new ReplyControllers()
+export default new LikeControllers()

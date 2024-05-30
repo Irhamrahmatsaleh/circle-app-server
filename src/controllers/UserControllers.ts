@@ -26,7 +26,7 @@ class UserControllers {
 
         delete payload.password
         return res.status(500).json(
-            new ResponseDTO({
+            new ResponseDTO<UserType>({
                 error,
                 message: {
                     status: 'User created!',
@@ -55,7 +55,7 @@ class UserControllers {
         }
 
         return res.status(200).json(
-            new ResponseDTO({
+            new ResponseDTO<string>({
                 error,
                 message: {
                     status: 'User logged in!',
@@ -86,7 +86,7 @@ class UserControllers {
         }
 
         return res.status(200).json(
-            new ResponseDTO({
+            new ResponseDTO<UserType>({
                 error,
                 message: {
                     status: 'Ready to reset password!',
@@ -120,10 +120,10 @@ class UserControllers {
         }
 
         return res.status(200).json(
-            new ResponseDTO({
+            new ResponseDTO<string>({
                 error,
                 message: {
-                    status: 'Ready to reset password!',
+                    status: 'Password changed!',
                 },
                 data: {
                     token: payload,

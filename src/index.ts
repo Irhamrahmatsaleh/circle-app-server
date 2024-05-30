@@ -4,6 +4,7 @@ import cors from 'cors'
 import VibeControllers from './controllers/VibeControllers'
 import UserControllers from './controllers/UserControllers'
 import ReplyControllers from './controllers/ReplyControllers'
+import LikeControllers from './controllers/LikeControllers'
 
 const prisma = new PrismaClient()
 
@@ -28,6 +29,7 @@ async function main() {
     v1MainRouter.delete('/vibes/:id', VibeControllers.deleteVibe)
 
     v1MainRouter.post('/replies', ReplyControllers.postReply)
+    v1MainRouter.post('/likes', LikeControllers.addLike)
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)

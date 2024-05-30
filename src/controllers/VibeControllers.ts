@@ -32,9 +32,8 @@ class VibeControllers {
 
     async getVibe(req: Request, res: Response) {
         const { id } = req.params
-        const { error, payload }: ServiceResponseDTO<VibeType> = await VibeServices.getVibe(
-            Number(id)
-        )
+
+        const { error, payload }: ServiceResponseDTO<VibeType> = await VibeServices.getVibe(+id)
 
         if (error) {
             return res.status(500).json(
@@ -59,7 +58,8 @@ class VibeControllers {
 
     async getUserVibes(req: Request, res: Response) {
         const { uid } = req.params
-        const { error, payload } = await VibeServices.getUserVibes(Number(uid))
+
+        const { error, payload } = await VibeServices.getUserVibes(+uid)
 
         if (error) {
             return res.status(500).json(
@@ -113,9 +113,7 @@ class VibeControllers {
 
     async deleteVibe(req: Request, res: Response) {
         const { id } = req.params
-        const { error, payload }: ServiceResponseDTO<VibeType> = await VibeServices.deleteVibe(
-            Number(id)
-        )
+        const { error, payload }: ServiceResponseDTO<VibeType> = await VibeServices.deleteVibe(+id)
 
         if (error) {
             return res.status(500).json(
