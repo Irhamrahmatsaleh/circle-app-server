@@ -3,14 +3,14 @@ import { UserType } from '../types/types'
 import UserDTO from '../dtos/UserDTO'
 import ResponseDTO from '../dtos/ResponseDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
-import UserServices from '../services/UserServices'
+import AuthServices from '../services/AuthServices'
 
-class UserControllers {
-    async createUser(req: Request, res: Response) {
+class AuthControllers {
+    async register(req: Request, res: Response) {
         const { username, email, name, password, avatar, bio } = req.body
         const userDTO = new UserDTO({ username, email, name, password, avatar, bio })
 
-        const { error, payload }: ServiceResponseDTO<UserType> = await UserServices.createUser(
+        const { error, payload }: ServiceResponseDTO<UserType> = await AuthServices.register(
             userDTO
         )
 
@@ -36,10 +36,10 @@ class UserControllers {
         )
     }
 
-    async userLogin(req: Request, res: Response) {
+    async login(req: Request, res: Response) {
         const { username, password } = req.body
 
-        const { error, payload }: ServiceResponseDTO<string> = await UserServices.userLogin({
+        const { error, payload }: ServiceResponseDTO<string> = await AuthServices.login({
             username,
             password,
         })
@@ -67,13 +67,12 @@ class UserControllers {
         )
     }
 
-    async userForgotPassword(req: Request, res: Response) {
+    async forgotPassword(req: Request, res: Response) {
         const { email } = req.body
 
-        const { error, payload }: ServiceResponseDTO<UserType> =
-            await UserServices.userForgotPassword({
-                email,
-            })
+        const { error, payload }: ServiceResponseDTO<UserType> = await AuthServices.forgotPassword({
+            email,
+        })
 
         if (error) {
             return res.status(500).json(
@@ -99,15 +98,13 @@ class UserControllers {
         )
     }
 
-    async userResetPassowrd(req: Request, res: Response) {
+    async resetPassword(req: Request, res: Response) {
         const { email, password } = req.body
 
-        const { error, payload }: ServiceResponseDTO<string> = await UserServices.userResetPassword(
-            {
-                email,
-                password,
-            }
-        )
+        const { error, payload }: ServiceResponseDTO<string> = await AuthServices.resetPassword({
+            email,
+            password,
+        })
 
         if (error) {
             return res.status(500).json(
@@ -133,4 +130,4 @@ class UserControllers {
     }
 }
 
-export default new UserControllers()
+export default new AuthControllers()

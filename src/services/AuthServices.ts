@@ -10,8 +10,8 @@ import ResetPasswordDTO from '../dtos/ResetPasswordDTO'
 
 const prisma = new PrismaClient()
 
-class UserServices {
-    async createUser(userDTO: UserDTO): Promise<ServiceResponseDTO<UserType>> {
+class AuthServices {
+    async register(userDTO: UserDTO): Promise<ServiceResponseDTO<UserType>> {
         try {
             const user = await prisma.user.create({
                 data: {
@@ -32,7 +32,7 @@ class UserServices {
         }
     }
 
-    async userLogin(loginDTO: LoginDTO): Promise<ServiceResponseDTO<string>> {
+    async login(loginDTO: LoginDTO): Promise<ServiceResponseDTO<string>> {
         try {
             const requestedUser = await prisma.user.findUnique({
                 where: {
@@ -61,7 +61,7 @@ class UserServices {
         }
     }
 
-    async userForgotPassword(
+    async forgotPassword(
         forgotPasswordDTO: ForgotPasswordDTO
     ): Promise<ServiceResponseDTO<UserType>> {
         try {
@@ -87,9 +87,7 @@ class UserServices {
         }
     }
 
-    async userResetPassword(
-        resetPasswordDTO: ResetPasswordDTO
-    ): Promise<ServiceResponseDTO<string>> {
+    async resetPassword(resetPasswordDTO: ResetPasswordDTO): Promise<ServiceResponseDTO<string>> {
         try {
             const updatedUser = await prisma.user.update({
                 where: {
@@ -117,4 +115,4 @@ class UserServices {
     }
 }
 
-export default new UserServices()
+export default new AuthServices()

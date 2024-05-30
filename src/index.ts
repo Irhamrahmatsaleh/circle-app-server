@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import express from 'express'
 import cors from 'cors'
 import VibeControllers from './controllers/VibeControllers'
-import UserControllers from './controllers/UserControllers'
+import AuthControllers from './controllers/AuthControllers'
 import ReplyControllers from './controllers/ReplyControllers'
 import LikeControllers from './controllers/LikeControllers'
 
@@ -17,10 +17,10 @@ app.use(express.json())
 app.use('/v1', v1MainRouter)
 
 async function main() {
-    v1MainRouter.post('/register', UserControllers.createUser)
-    v1MainRouter.post('/login', UserControllers.userLogin)
-    v1MainRouter.post('/auth/forgot', UserControllers.userForgotPassword)
-    v1MainRouter.post('/auth/reset', UserControllers.userResetPassowrd)
+    v1MainRouter.post('/register', AuthControllers.register)
+    v1MainRouter.post('/login', AuthControllers.login)
+    v1MainRouter.post('/auth/forgot', AuthControllers.forgotPassword)
+    v1MainRouter.post('/auth/reset', AuthControllers.resetPassword)
 
     v1MainRouter.get('/vibes', VibeControllers.getVibes)
     v1MainRouter.get('/vibes/:id', VibeControllers.getVibe)
