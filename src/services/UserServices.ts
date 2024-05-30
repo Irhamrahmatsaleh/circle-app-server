@@ -1,14 +1,16 @@
 import { PrismaClient } from '@prisma/client'
+import { UserType } from '../types/types'
 import UserDTO from '../dtos/UserDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import Hasher from '../utils/Hasher'
 import LoginDTO from '../dtos/LoginDTO'
 import CircleError from '../utils/CircleError'
+import ForgotDTO from '../dtos/ForgotDTO'
 
 const prisma = new PrismaClient()
 
 class UserServices {
-    async createUser(userDTO: UserDTO): Promise<ServiceResponseDTO<UserDTO>> {
+    async createUser(userDTO: UserDTO): Promise<ServiceResponseDTO<UserType>> {
         try {
             const user = await prisma.user.create({
                 data: {
@@ -17,7 +19,7 @@ class UserServices {
                 },
             })
 
-            return new ServiceResponseDTO<UserDTO>({
+            return new ServiceResponseDTO<UserType>({
                 error: false,
                 payload: user,
             })
@@ -46,9 +48,32 @@ class UserServices {
                 throw new CircleError({ error: 'The username/password was incorrect.' })
             }
 
-            return new ServiceResponseDTO({
+            return new ServiceResponseDTO<string>({
                 error: false,
                 payload: requestedUser.password,
+            })
+        } catch (error) {
+            return new ServiceResponseDTO({
+                error: true,
+                payload: error,
+            })
+        }
+    }
+
+    async userForgotPassword(forgotDTO: ForgotDTO): Promise<ServiceResponseDTO<UserType>> {
+        try {
+            const requestedUser = await prisma.user.findUnique({
+                where: {
+                    email: forgotDTO.email,
+                },
+            })
+            if (!requestedUser) {
+                throw new CircleError({ error: 'Requested user does not exist.' })
+            }
+
+            return new ServiceResponseDTO<UserType>({
+                error: false,
+                payload: requestedUser,
             })
         } catch (error) {
             return new ServiceResponseDTO({
