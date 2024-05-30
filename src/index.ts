@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import express from 'express'
 import cors from 'cors'
 import VibeControllers from './controllers/VibeControllers'
+import UserControllers from './controllers/UserControllers'
 
 const prisma = new PrismaClient()
 
@@ -19,6 +20,8 @@ async function main() {
     v1MainRouter.get('/vibes/user/:uid', VibeControllers.getUserVibes)
     v1MainRouter.post('/vibes', VibeControllers.postVibes)
     v1MainRouter.delete('/vibes/:id', VibeControllers.deleteVibe)
+
+    v1MainRouter.post('/register', UserControllers.createUser)
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)

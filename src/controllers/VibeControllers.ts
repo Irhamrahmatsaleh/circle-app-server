@@ -62,7 +62,7 @@ class VibeControllers {
         const { error, payload } = await VibeServices.getUserVibes(Number(uid))
 
         if (error) {
-            res.status(500).json(
+            return res.status(500).json(
                 new ResponseDTO<null>({
                     error,
                     message: payload,
@@ -71,7 +71,7 @@ class VibeControllers {
             )
         }
 
-        res.status(200).json(
+        return res.status(200).json(
             new ResponseDTO<VibeType[]>({
                 error,
                 message: {
@@ -85,6 +85,7 @@ class VibeControllers {
     async postVibes(req: Request, res: Response) {
         const { content, image, authorId } = req.body
         const vibeDTO = new VibeDTO({ content, image, authorId })
+
         const { error, payload }: ServiceResponseDTO<VibeType> = await VibeServices.postVibe(
             vibeDTO
         )
