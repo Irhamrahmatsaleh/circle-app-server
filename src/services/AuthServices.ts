@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { UserType } from '../types/types'
-import UserDTO from '../dtos/UserDTO'
+import RegisterDTO from '../dtos/RegisterDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import Hasher from '../utils/Hasher'
 import LoginDTO from '../dtos/LoginDTO'
@@ -11,12 +11,12 @@ import ResetPasswordDTO from '../dtos/ResetPasswordDTO'
 const prisma = new PrismaClient()
 
 class AuthServices {
-    async register(userDTO: UserDTO): Promise<ServiceResponseDTO<UserType>> {
+    async register(registerDTO: RegisterDTO): Promise<ServiceResponseDTO<UserType>> {
         try {
             const user = await prisma.user.create({
                 data: {
-                    ...userDTO,
-                    password: await Hasher.hashPassword(userDTO.password),
+                    ...registerDTO,
+                    password: await Hasher.hashPassword(registerDTO.password),
                 },
             })
 

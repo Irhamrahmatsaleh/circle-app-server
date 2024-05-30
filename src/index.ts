@@ -20,7 +20,7 @@ async function main() {
     v1MainRouter.post('/register', AuthControllers.register)
     v1MainRouter.post('/login', AuthControllers.login)
     v1MainRouter.post('/auth/forgot', AuthControllers.forgotPassword)
-    v1MainRouter.post('/auth/reset', AuthControllers.resetPassword)
+    v1MainRouter.patch('/auth/reset', AuthControllers.resetPassword)
 
     v1MainRouter.get('/vibes', VibeControllers.getVibes)
     v1MainRouter.get('/vibes/:id', VibeControllers.getVibe)

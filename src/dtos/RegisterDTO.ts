@@ -1,4 +1,4 @@
-class UserDTO {
+class RegisterDTO {
     username: string
     email: string
     name: string
@@ -16,4 +16,4 @@ class UserDTO {
     }
 }
 
-export default UserDTO
+export default RegisterDTO

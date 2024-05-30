@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { UserType } from '../types/types'
-import UserDTO from '../dtos/UserDTO'
+import RegisterDTO from '../dtos/RegisterDTO'
 import ResponseDTO from '../dtos/ResponseDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import AuthServices from '../services/AuthServices'
@@ -8,7 +8,7 @@ import AuthServices from '../services/AuthServices'
 class AuthControllers {
     async register(req: Request, res: Response) {
         const { username, email, name, password, avatar, bio } = req.body
-        const userDTO = new UserDTO({ username, email, name, password, avatar, bio })
+        const userDTO = new RegisterDTO({ username, email, name, password, avatar, bio })
 
         const { error, payload }: ServiceResponseDTO<UserType> = await AuthServices.register(
             userDTO
