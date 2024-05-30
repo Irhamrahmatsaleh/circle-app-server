@@ -34,6 +34,37 @@ class UserControllers {
             })
         )
     }
+
+    async userLogin(req: Request, res: Response) {
+        const { username, password } = req.body
+
+        const { error, payload }: ServiceResponseDTO<string> = await UserServices.userLogin({
+            username,
+            password,
+        })
+
+        if (error) {
+            return res.status(500).json(
+                new ResponseDTO({
+                    error,
+                    message: payload,
+                    data: null,
+                })
+            )
+        }
+
+        return res.status(200).json(
+            new ResponseDTO({
+                error,
+                message: {
+                    status: 'User logged in!',
+                },
+                data: {
+                    token: payload,
+                },
+            })
+        )
+    }
 }
 
 export default new UserControllers()
