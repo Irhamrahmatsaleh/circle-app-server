@@ -98,6 +98,39 @@ class UserControllers {
             })
         )
     }
+
+    async userResetPassowrd(req: Request, res: Response) {
+        const { email, password } = req.body
+
+        const { error, payload }: ServiceResponseDTO<string> = await UserServices.userResetPassword(
+            {
+                email,
+                password,
+            }
+        )
+
+        if (error) {
+            return res.status(500).json(
+                new ResponseDTO<null>({
+                    error,
+                    message: payload,
+                    data: null,
+                })
+            )
+        }
+
+        return res.status(200).json(
+            new ResponseDTO({
+                error,
+                message: {
+                    status: 'Ready to reset password!',
+                },
+                data: {
+                    token: payload,
+                },
+            })
+        )
+    }
 }
 
 export default new UserControllers()

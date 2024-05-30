@@ -24,6 +24,7 @@ async function main() {
     v1MainRouter.post('/register', UserControllers.createUser)
     v1MainRouter.post('/login', UserControllers.userLogin)
     v1MainRouter.post('/auth/forgot', UserControllers.userForgotPassword)
+    v1MainRouter.post('/auth/reset', UserControllers.userResetPassowrd)
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)

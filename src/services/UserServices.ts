@@ -6,6 +6,7 @@ import Hasher from '../utils/Hasher'
 import LoginDTO from '../dtos/LoginDTO'
 import CircleError from '../utils/CircleError'
 import ForgotPasswordDTO from '../dtos/ForgotPasswordDTO'
+import ResetPasswordDTO from '../dtos/ResetPasswordDTO'
 
 const prisma = new PrismaClient()
 
@@ -69,6 +70,7 @@ class UserServices {
                     email: forgotPasswordDTO.email,
                 },
             })
+
             if (!requestedUser) {
                 throw new CircleError({ error: 'Requested user does not exist.' })
             }
@@ -76,6 +78,35 @@ class UserServices {
             return new ServiceResponseDTO<UserType>({
                 error: false,
                 payload: requestedUser,
+            })
+        } catch (error) {
+            return new ServiceResponseDTO({
+                error: true,
+                payload: error,
+            })
+        }
+    }
+
+    async userResetPassword(
+        resetPasswordDTO: ResetPasswordDTO
+    ): Promise<ServiceResponseDTO<string>> {
+        try {
+            const updatedUser = await prisma.user.update({
+                where: {
+                    email: resetPasswordDTO.email,
+                },
+                data: {
+                    password: await Hasher.hashPassword(resetPasswordDTO.password),
+                },
+            })
+
+            if (!updatedUser) {
+                throw new CircleError({ error: 'Requested user does not exist.' })
+            }
+
+            return new ServiceResponseDTO<string>({
+                error: false,
+                payload: updatedUser.password,
             })
         } catch (error) {
             return new ServiceResponseDTO({
