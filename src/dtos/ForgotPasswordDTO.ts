@@ -1,4 +1,4 @@
-class ForgotDTO {
+class ForgotPasswordDTO {
     email: string
 
     constructor({ email }) {
@@ -6,4 +6,4 @@ class ForgotDTO {
     }
 }
 
-export default ForgotDTO
+export default ForgotPasswordDTO

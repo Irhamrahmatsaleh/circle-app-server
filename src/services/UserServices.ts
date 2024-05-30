@@ -5,7 +5,7 @@ import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import Hasher from '../utils/Hasher'
 import LoginDTO from '../dtos/LoginDTO'
 import CircleError from '../utils/CircleError'
-import ForgotDTO from '../dtos/ForgotDTO'
+import ForgotPasswordDTO from '../dtos/ForgotPasswordDTO'
 
 const prisma = new PrismaClient()
 
@@ -60,11 +60,13 @@ class UserServices {
         }
     }
 
-    async userForgotPassword(forgotDTO: ForgotDTO): Promise<ServiceResponseDTO<UserType>> {
+    async userForgotPassword(
+        forgotPasswordDTO: ForgotPasswordDTO
+    ): Promise<ServiceResponseDTO<UserType>> {
         try {
             const requestedUser = await prisma.user.findUnique({
                 where: {
-                    email: forgotDTO.email,
+                    email: forgotPasswordDTO.email,
                 },
             })
             if (!requestedUser) {
