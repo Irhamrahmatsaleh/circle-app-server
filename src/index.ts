@@ -5,6 +5,7 @@ import VibeControllers from './controllers/VibeControllers'
 import AuthControllers from './controllers/AuthControllers'
 import ReplyControllers from './controllers/ReplyControllers'
 import LikeControllers from './controllers/LikeControllers'
+import UserControllers from './controllers/UserControllers'
 
 const prisma = new PrismaClient()
 
@@ -31,6 +32,8 @@ async function main() {
     v1MainRouter.post('/replies', ReplyControllers.postReply)
     v1MainRouter.delete('/replies/:id', ReplyControllers.deleteReply)
     v1MainRouter.post('/likes', LikeControllers.likeMechanism)
+
+    v1MainRouter.patch('/users/:id', UserControllers.editUser)
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)

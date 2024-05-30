@@ -37,3 +37,8 @@ export interface LikeType {
     createdAt: Date
     updatedAt: Date
 }
+
+export interface ServiceResponseType<T> {
+    error: boolean
+    payload: T | object
+}

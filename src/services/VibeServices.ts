@@ -59,7 +59,7 @@ class VibeServices {
                 throw new CircleError({ error: 'Requested user does not have any vibes.' })
             }
 
-            return new ServiceResponseDTO({
+            return new ServiceResponseDTO<VibeType>({
                 error: false,
                 payload: requestedUserVibes,
             })

@@ -1,4 +1,4 @@
-class ControllerResponseDTO<T> {
+class ResponseDTO<T> {
     error: boolean
     message: object
     data: T | null
@@ -10,4 +10,4 @@ class ControllerResponseDTO<T> {
     }
 }
 
-export default ControllerResponseDTO
+export default ResponseDTO
