@@ -47,6 +47,30 @@ class VibeServices {
         }
     }
 
+    async getUserVibes(uid: number): Promise<ServiceResponseDTO<VibeType>> {
+        try {
+            const requestedUserVibes = await prisma.vibe.findMany({
+                where: {
+                    authorId: uid,
+                },
+            })
+
+            if (!requestedUserVibes.length) {
+                throw new CircleError({ error: 'Requested user does not have any vibes.' })
+            }
+
+            return new ServiceResponseDTO({
+                error: false,
+                payload: requestedUserVibes,
+            })
+        } catch (error) {
+            return new ServiceResponseDTO({
+                error: true,
+                payload: error,
+            })
+        }
+    }
+
     async postVibe(vibeDTO: VibeDTO): Promise<ServiceResponseDTO<VibeType>> {
         try {
             const postedVibe = await prisma.vibe.create({

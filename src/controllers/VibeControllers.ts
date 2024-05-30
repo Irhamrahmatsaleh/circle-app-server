@@ -23,7 +23,7 @@ class VibeControllers {
             new ResponseDTO<VibeType>({
                 error,
                 message: {
-                    status: 'Ok!',
+                    status: 'Vibes retrieved!',
                 },
                 data: payload,
             })
@@ -50,7 +50,32 @@ class VibeControllers {
             new ResponseDTO<VibeType>({
                 error,
                 message: {
-                    status: 'Ok!',
+                    status: 'Vibe retrieved!',
+                },
+                data: payload,
+            })
+        )
+    }
+
+    async getUserVibes(req: Request, res: Response) {
+        const { uid } = req.params
+        const { error, payload } = await VibeServices.getUserVibes(Number(uid))
+
+        if (error) {
+            res.status(500).json(
+                new ResponseDTO<null>({
+                    error,
+                    message: payload,
+                    data: null,
+                })
+            )
+        }
+
+        res.status(200).json(
+            new ResponseDTO<VibeType[]>({
+                error,
+                message: {
+                    status: "User's vibes retrieved!",
                 },
                 data: payload,
             })
@@ -78,7 +103,7 @@ class VibeControllers {
             new ResponseDTO<VibeType>({
                 error,
                 message: {
-                    status: 'Ok!',
+                    status: 'Vibe posted!',
                 },
                 data: payload,
             })
@@ -105,7 +130,7 @@ class VibeControllers {
             new ResponseDTO<VibeType>({
                 error,
                 message: {
-                    status: 'Ok!',
+                    status: 'Vibe deleted!',
                 },
                 data: payload,
             })
