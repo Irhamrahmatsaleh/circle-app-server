@@ -5,10 +5,10 @@ import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import ResponseDTO from '../dtos/ResponseDTO'
 
 class LikeControllers {
-    async addLike(req: Request, res: Response) {
+    async likeMechanism(req: Request, res: Response) {
         const { authorId, vibeId } = req.body
 
-        const { error, payload }: ServiceResponseDTO<LikeType> = await LikeServices.addLike({
+        const { error, payload }: ServiceResponseDTO<LikeType> = await LikeServices.likeMechanism({
             authorId,
             vibeId,
         })
@@ -27,7 +27,7 @@ class LikeControllers {
             new ResponseDTO<LikeType>({
                 error,
                 message: {
-                    status: 'Like added!',
+                    status: 'Ok!',
                 },
                 data: payload,
             })

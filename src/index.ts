@@ -29,7 +29,7 @@ async function main() {
     v1MainRouter.delete('/vibes/:id', VibeControllers.deleteVibe)
 
     v1MainRouter.post('/replies', ReplyControllers.postReply)
-    v1MainRouter.post('/likes', LikeControllers.addLike)
+    v1MainRouter.post('/likes', LikeControllers.likeMechanism)
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)
