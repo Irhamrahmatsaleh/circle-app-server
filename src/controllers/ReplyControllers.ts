@@ -7,7 +7,6 @@ import ResponseDTO from '../dtos/ResponseDTO'
 class ReplyControllers {
     async postReply(req: Request, res: Response) {
         const { image, content, authorId, vibeId } = req.body
-
         const { error, payload }: ServiceResponseDTO<ReplyType> = await ReplyServices.postReply({
             image,
             content,
@@ -30,6 +29,33 @@ class ReplyControllers {
                 error,
                 message: {
                     status: 'Reply posted!',
+                },
+                data: payload,
+            })
+        )
+    }
+
+    async deleteReply(req: Request, res: Response) {
+        const { id } = req.params
+        const { error, payload }: ServiceResponseDTO<ReplyType> = await ReplyServices.deleteReply(
+            +id
+        )
+
+        if (error) {
+            return res.status(500).json(
+                new ResponseDTO<null>({
+                    error,
+                    message: payload,
+                    data: null,
+                })
+            )
+        }
+
+        return res.status(200).json(
+            new ResponseDTO<ReplyType>({
+                error,
+                message: {
+                    status: 'Reply deleted!',
                 },
                 data: payload,
             })

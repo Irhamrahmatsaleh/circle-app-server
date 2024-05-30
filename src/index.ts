@@ -29,6 +29,7 @@ async function main() {
     v1MainRouter.delete('/vibes/:id', VibeControllers.deleteVibe)
 
     v1MainRouter.post('/replies', ReplyControllers.postReply)
+    v1MainRouter.delete('/replies/:id', ReplyControllers.deleteReply)
     v1MainRouter.post('/likes', LikeControllers.likeMechanism)
 
     app.listen(port, () => {

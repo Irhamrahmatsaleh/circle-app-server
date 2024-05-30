@@ -23,6 +23,26 @@ class ReplyServices {
             })
         }
     }
+
+    async deleteReply(id: number): Promise<ServiceResponseDTO<ReplyType>> {
+        try {
+            const deletedReply = await prisma.reply.delete({
+                where: {
+                    id: id,
+                },
+            })
+
+            return new ServiceResponseDTO<ReplyType>({
+                error: false,
+                payload: deletedReply,
+            })
+        } catch (error) {
+            return new ServiceResponseDTO({
+                error: true,
+                payload: error,
+            })
+        }
+    }
 }
 
 export default new ReplyServices()
