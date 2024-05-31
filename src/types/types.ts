@@ -38,6 +38,14 @@ export interface LikeType {
     updatedAt: Date
 }
 
+export interface FollowsType {
+    id: number
+    followingId: number
+    followerId: number
+    createdAt: Date
+    updatedAt: Date
+}
+
 export interface ServiceResponseType<T> {
     error: boolean
     payload: T | object

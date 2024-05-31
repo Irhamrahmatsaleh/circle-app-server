@@ -77,10 +77,10 @@ model Follow {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  following     User      @relation(fields: [followingId], references: [id], name: "UserFollowing")
-  followingId   Int
-  followers     User      @relation(fields: [followerId], references: [id], name: "UserFollowers")
-  followerId    Int
+  following     User?     @relation(fields: [followingId], references: [id], name: "UserFollowing")
+  followingId   Int?
+  followers     User?     @relation(fields: [followerId], references: [id], name: "UserFollowers")
+  followerId    Int?
 
   @@map("follows")
 }

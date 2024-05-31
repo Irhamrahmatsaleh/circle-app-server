@@ -6,6 +6,7 @@ import AuthControllers from './controllers/AuthControllers'
 import ReplyControllers from './controllers/ReplyControllers'
 import LikeControllers from './controllers/LikeControllers'
 import UserControllers from './controllers/UserControllers'
+import FollowControllers from './controllers/FollowControllers'
 
 const prisma = new PrismaClient()
 
@@ -35,6 +36,8 @@ async function main() {
 
     v1MainRouter.get('/users', UserControllers.getUsers)
     v1MainRouter.patch('/users/:id', UserControllers.editUser)
+
+    v1MainRouter.get('/follow/:id', FollowControllers.follow)
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)
