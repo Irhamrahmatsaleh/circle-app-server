@@ -6,6 +6,22 @@ import UserDTO from '../dtos/UserDTO'
 const prisma = new PrismaClient()
 
 class UserServices {
+    async getUsers(): Promise<ServiceResponseDTO<UserType[]>> {
+        try {
+            const users = await prisma.user.findMany()
+
+            return new ServiceResponseDTO<UserType[]>({
+                error: false,
+                payload: users,
+            })
+        } catch (error) {
+            return new ServiceResponseDTO({
+                error: true,
+                payload: error,
+            })
+        }
+    }
+
     async editUser(userDTO: UserDTO): Promise<ServiceResponseDTO<UserType>> {
         try {
             const requestedUser = await prisma.user.findUnique({

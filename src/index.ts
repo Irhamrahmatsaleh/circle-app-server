@@ -33,6 +33,7 @@ async function main() {
     v1MainRouter.delete('/replies/:id', ReplyControllers.deleteReply)
     v1MainRouter.post('/likes', LikeControllers.likeMechanism)
 
+    v1MainRouter.get('/users', UserControllers.getUsers)
     v1MainRouter.patch('/users/:id', UserControllers.editUser)
 
     app.listen(port, () => {
