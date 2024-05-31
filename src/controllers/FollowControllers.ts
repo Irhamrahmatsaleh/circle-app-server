@@ -10,7 +10,7 @@ class FollowControllers {
 
         const { error, payload }: ServiceResponseDTO<FollowsType> = await FollowServices.follow({
             followingId: +id,
-            followerId: 2, // for test
+            followerId: 1, // for test
         })
 
         if (error) {
