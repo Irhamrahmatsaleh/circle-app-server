@@ -38,6 +38,7 @@ async function main() {
     v1MainRouter.patch('/users/:id', UserControllers.editUser)
 
     v1MainRouter.get('/follow/:id', FollowControllers.follow)
+    v1MainRouter.get('/unfollow/:id', FollowControllers.unfollow)
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)
