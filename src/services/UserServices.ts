@@ -1,14 +1,44 @@
 import { PrismaClient } from '@prisma/client'
-import { UserType } from '../types/types'
+import { UserType, FollowType } from '../types/types'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import UserDTO from '../dtos/UserDTO'
 
 const prisma = new PrismaClient()
 
+export interface UserWithFollowersType extends UserType {
+    Followers?: FollowType[]
+}
+
 class UserServices {
-    async getUsers(): Promise<ServiceResponseDTO<UserType[]>> {
+    async getUsers(loggedUser: UserType): Promise<ServiceResponseDTO<UserType[]>> {
         try {
-            const users = await prisma.user.findMany()
+            const rawUsers: UserWithFollowersType[] = await prisma.user.findMany({
+                include: {
+                    Followers: true,
+                },
+            })
+
+            const users: UserType[] = rawUsers
+                .filter((user) => user.id !== loggedUser.id)
+                .map((user) => {
+                    const followers = user.Followers
+                    delete user.Followers
+                    delete user.password
+
+                    if (followers.length) {
+                        return {
+                            ...user,
+                            isFollowed: followers.some(
+                                (follower) => follower.ownerId === loggedUser.id
+                            ),
+                        }
+                    }
+
+                    return {
+                        ...user,
+                        isFollowed: false,
+                    }
+                })
 
             return new ServiceResponseDTO<UserType[]>({
                 error: false,

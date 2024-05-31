@@ -40,8 +40,8 @@ export interface LikeType {
 
 export interface FollowType {
     id: number
-    followingId: number
-    followerId: number
+    targetId: number
+    ownerId: number
     createdAt: Date
     updatedAt: Date
 }

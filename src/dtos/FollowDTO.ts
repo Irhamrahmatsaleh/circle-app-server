@@ -1,10 +1,10 @@
 class FollowDTO {
-    followingId: number
-    followerId: number
+    targetId: number
+    ownerId: number
 
-    constructor({ followingId, followerId }) {
-        this.followingId = followingId
-        this.followerId = followerId
+    constructor({ targetId, ownerId }) {
+        this.targetId = targetId
+        this.ownerId = ownerId
     }
 }
 

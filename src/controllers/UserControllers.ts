@@ -6,7 +6,10 @@ import ResponseDTO from '../dtos/ResponseDTO'
 
 class UserControllers {
     async getUsers(req: Request, res: Response) {
-        const { error, payload }: ServiceResponseDTO<UserType[]> = await UserServices.getUsers()
+        const loggedUser = res.locals.user
+        const { error, payload }: ServiceResponseDTO<UserType[]> = await UserServices.getUsers(
+            loggedUser
+        )
 
         if (error) {
             return res.status(500).json(
@@ -19,7 +22,7 @@ class UserControllers {
         }
 
         return res.status(200).json(
-            new ResponseDTO<UserType>({
+            new ResponseDTO<UserType[]>({
                 error,
                 message: {
                     status: 'User retrieved!',

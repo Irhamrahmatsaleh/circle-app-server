@@ -64,13 +64,13 @@ class FollowServices {
     }
 
     private isTargetedItSelf(FollowDTO: FollowDTO): boolean {
-        return FollowDTO.followingId === FollowDTO.followerId
+        return FollowDTO.targetId === FollowDTO.ownerId
     }
 
     private async isFollowed(FollowDTO: FollowDTO): Promise<FollowType> {
         return await prisma.follow.findFirst({
             where: {
-                AND: [{ followingId: FollowDTO.followingId }, { followerId: FollowDTO.followerId }],
+                AND: [{ targetId: FollowDTO.targetId }, { ownerId: FollowDTO.ownerId }],
             },
         })
     }
