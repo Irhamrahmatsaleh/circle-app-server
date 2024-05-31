@@ -1,31 +1,29 @@
 import { PrismaClient } from '@prisma/client'
-import { FollowsType } from '../types/types'
-import FollowsDTO from '../dtos/FollowsDTO'
+import { FollowType } from '../types/types'
+import FollowDTO from '../dtos/FollowDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import CircleError from '../utils/CircleError'
 
 const prisma = new PrismaClient()
 
 class FollowServices {
-    async follow(followsDTO: FollowsDTO): Promise<ServiceResponseDTO<FollowsType>> {
+    async follow(FollowDTO: FollowDTO): Promise<ServiceResponseDTO<FollowType>> {
         try {
-            if (this.isTargetedItSelf(followsDTO)) {
+            if (this.isTargetedItSelf(FollowDTO)) {
                 throw new CircleError({ error: "Can't follow itself." })
             }
 
-            const isFollowed: FollowsType = await this.isFollowed(followsDTO)
-
-            if (isFollowed) {
+            if (await this.isFollowed(FollowDTO)) {
                 throw new CircleError({ error: 'Target user is already followed.' })
             }
 
-            const follows = await prisma.follow.create({
-                data: followsDTO,
+            const createdFollow = await prisma.follow.create({
+                data: FollowDTO,
             })
 
-            return new ServiceResponseDTO({
+            return new ServiceResponseDTO<FollowType>({
                 error: false,
-                payload: follows,
+                payload: createdFollow,
             })
         } catch (error) {
             return new ServiceResponseDTO({
@@ -35,27 +33,27 @@ class FollowServices {
         }
     }
 
-    async unfollow(followsDTO: FollowsDTO): Promise<ServiceResponseDTO<FollowsType>> {
+    async unfollow(FollowDTO: FollowDTO): Promise<ServiceResponseDTO<FollowType>> {
         try {
-            if (this.isTargetedItSelf(followsDTO)) {
+            if (this.isTargetedItSelf(FollowDTO)) {
                 throw new CircleError({ error: "Can't unfollow itself." })
             }
 
-            const isFollowed: FollowsType = await this.isFollowed(followsDTO)
+            const isFollowed: FollowType = await this.isFollowed(FollowDTO)
 
             if (!isFollowed) {
                 throw new CircleError({ error: 'Target user is not followed yet.' })
             }
 
-            const unfollow = await prisma.follow.delete({
+            const createdUnfollow = await prisma.follow.delete({
                 where: {
                     id: isFollowed.id,
                 },
             })
 
-            return new ServiceResponseDTO({
+            return new ServiceResponseDTO<FollowType>({
                 error: false,
-                payload: unfollow,
+                payload: createdUnfollow,
             })
         } catch (error) {
             return new ServiceResponseDTO({
@@ -65,17 +63,14 @@ class FollowServices {
         }
     }
 
-    private isTargetedItSelf(followsDTO: FollowsDTO): boolean {
-        return followsDTO.followingId === followsDTO.followerId
+    private isTargetedItSelf(FollowDTO: FollowDTO): boolean {
+        return FollowDTO.followingId === FollowDTO.followerId
     }
 
-    private async isFollowed(followsDTO: FollowsDTO): Promise<FollowsType> {
+    private async isFollowed(FollowDTO: FollowDTO): Promise<FollowType> {
         return await prisma.follow.findFirst({
             where: {
-                AND: [
-                    { followingId: followsDTO.followingId },
-                    { followerId: followsDTO.followerId },
-                ],
+                AND: [{ followingId: FollowDTO.followingId }, { followerId: FollowDTO.followerId }],
             },
         })
     }

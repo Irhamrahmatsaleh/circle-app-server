@@ -70,7 +70,7 @@ class AuthControllers {
     async forgotPassword(req: Request, res: Response) {
         const { email } = req.body
 
-        const { error, payload }: ServiceResponseDTO<UserType> = await AuthServices.forgotPassword({
+        const { error, payload }: ServiceResponseDTO<string> = await AuthServices.forgotPassword({
             email,
         })
 
@@ -91,8 +91,7 @@ class AuthControllers {
                     status: 'Ready to reset password!',
                 },
                 data: {
-                    id: payload.id,
-                    email: payload.email,
+                    token: payload,
                 },
             })
         )

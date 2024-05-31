@@ -1,4 +1,4 @@
-class FollowsDTO {
+class FollowDTO {
     followingId: number
     followerId: number
 
@@ -8,4 +8,4 @@ class FollowsDTO {
     }
 }
 
-export default FollowsDTO
+export default FollowDTO

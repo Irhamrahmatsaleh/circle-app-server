@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { UserType } from '../types/types'
+import { SECRET_SAUCE } from '../configs/config'
+import jwt from 'jsonwebtoken'
 import RegisterDTO from '../dtos/RegisterDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import Hasher from '../utils/Hasher'
@@ -20,6 +22,7 @@ class AuthServices {
                 },
             })
 
+            delete user.password
             return new ServiceResponseDTO<UserType>({
                 error: false,
                 payload: user,
@@ -49,9 +52,12 @@ class AuthServices {
                 throw new CircleError({ error: 'The username/password was incorrect.' })
             }
 
+            delete requestedUser.password
+            const token = jwt.sign(requestedUser, SECRET_SAUCE)
+
             return new ServiceResponseDTO<string>({
                 error: false,
-                payload: requestedUser.password,
+                payload: token,
             })
         } catch (error) {
             return new ServiceResponseDTO({
@@ -63,7 +69,7 @@ class AuthServices {
 
     async forgotPassword(
         forgotPasswordDTO: ForgotPasswordDTO
-    ): Promise<ServiceResponseDTO<UserType>> {
+    ): Promise<ServiceResponseDTO<string>> {
         try {
             const requestedUser = await prisma.user.findUnique({
                 where: {
@@ -75,9 +81,12 @@ class AuthServices {
                 throw new CircleError({ error: 'Requested user does not exist.' })
             }
 
-            return new ServiceResponseDTO<UserType>({
+            delete requestedUser.password
+            const token = jwt.sign(requestedUser, SECRET_SAUCE)
+
+            return new ServiceResponseDTO<string>({
                 error: false,
-                payload: requestedUser,
+                payload: token,
             })
         } catch (error) {
             return new ServiceResponseDTO({
@@ -101,10 +110,12 @@ class AuthServices {
             if (!updatedUser) {
                 throw new CircleError({ error: 'Requested user does not exist.' })
             }
+            delete updatedUser.password
+            const token = jwt.sign(updatedUser, SECRET_SAUCE)
 
             return new ServiceResponseDTO<string>({
                 error: false,
-                payload: updatedUser.password,
+                payload: token,
             })
         } catch (error) {
             return new ServiceResponseDTO({

@@ -1,16 +1,17 @@
 import { Request, Response } from 'express'
+import { FollowType } from '../types/types'
 import FollowServices from '../services/FollowServices'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
-import { FollowsType } from '../types/types'
 import ResponseDTO from '../dtos/ResponseDTO'
 
 class FollowControllers {
     async follow(req: Request, res: Response) {
+        const loggedUser = res.locals.user
         const { id } = req.params
 
-        const { error, payload }: ServiceResponseDTO<FollowsType> = await FollowServices.follow({
+        const { error, payload }: ServiceResponseDTO<FollowType> = await FollowServices.follow({
             followingId: +id,
-            followerId: 1, // for test
+            followerId: loggedUser.id,
         })
 
         if (error) {
@@ -24,7 +25,7 @@ class FollowControllers {
         }
 
         return res.status(200).json(
-            new ResponseDTO<FollowsType>({
+            new ResponseDTO<FollowType>({
                 error,
                 message: {
                     status: 'User followed!',
@@ -35,11 +36,12 @@ class FollowControllers {
     }
 
     async unfollow(req: Request, res: Response) {
+        const loggedUser = res.locals.user
         const { id } = req.params
 
-        const { error, payload }: ServiceResponseDTO<FollowsType> = await FollowServices.unfollow({
+        const { error, payload }: ServiceResponseDTO<FollowType> = await FollowServices.unfollow({
             followingId: +id,
-            followerId: 2, // for test
+            followerId: loggedUser.id,
         })
 
         if (error) {
@@ -53,7 +55,7 @@ class FollowControllers {
         }
 
         return res.status(200).json(
-            new ResponseDTO<FollowsType>({
+            new ResponseDTO<FollowType>({
                 error,
                 message: {
                     status: 'User unfollowed!',

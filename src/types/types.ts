@@ -38,7 +38,7 @@ export interface LikeType {
     updatedAt: Date
 }
 
-export interface FollowsType {
+export interface FollowType {
     id: number
     followingId: number
     followerId: number

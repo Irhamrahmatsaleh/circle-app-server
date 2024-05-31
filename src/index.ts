@@ -7,6 +7,7 @@ import ReplyControllers from './controllers/ReplyControllers'
 import LikeControllers from './controllers/LikeControllers'
 import UserControllers from './controllers/UserControllers'
 import FollowControllers from './controllers/FollowControllers'
+import authenticate from './middlewares/authenticate'
 
 const prisma = new PrismaClient()
 
@@ -22,23 +23,23 @@ async function main() {
     v1MainRouter.post('/register', AuthControllers.register)
     v1MainRouter.post('/login', AuthControllers.login)
     v1MainRouter.post('/auth/forgot', AuthControllers.forgotPassword)
-    v1MainRouter.patch('/auth/reset', AuthControllers.resetPassword)
+    v1MainRouter.patch('/auth/reset', authenticate, AuthControllers.resetPassword)
 
-    v1MainRouter.get('/vibes', VibeControllers.getVibes)
-    v1MainRouter.get('/vibes/:id', VibeControllers.getVibe)
-    v1MainRouter.get('/vibes/user/:uid', VibeControllers.getUserVibes)
-    v1MainRouter.post('/vibes', VibeControllers.postVibes)
-    v1MainRouter.delete('/vibes/:id', VibeControllers.deleteVibe)
+    v1MainRouter.get('/vibes', authenticate, VibeControllers.getVibes)
+    v1MainRouter.get('/vibes/:id', authenticate, VibeControllers.getVibe)
+    v1MainRouter.get('/vibes/user/:id', authenticate, VibeControllers.getUserVibes)
+    v1MainRouter.post('/vibes', authenticate, VibeControllers.postVibes)
+    v1MainRouter.delete('/vibes/:id', authenticate, VibeControllers.deleteVibe)
 
-    v1MainRouter.post('/replies', ReplyControllers.postReply)
-    v1MainRouter.delete('/replies/:id', ReplyControllers.deleteReply)
-    v1MainRouter.post('/likes', LikeControllers.likeMechanism)
+    v1MainRouter.post('/replies', authenticate, ReplyControllers.postReply)
+    v1MainRouter.delete('/replies/:id', authenticate, ReplyControllers.deleteReply)
+    v1MainRouter.post('/likes', authenticate, LikeControllers.likeMechanism)
 
-    v1MainRouter.get('/users', UserControllers.getUsers)
-    v1MainRouter.patch('/users/:id', UserControllers.editUser)
+    v1MainRouter.get('/users', authenticate, UserControllers.getUsers)
+    v1MainRouter.patch('/users/me', authenticate, UserControllers.editUser)
 
-    v1MainRouter.get('/follow/:id', FollowControllers.follow)
-    v1MainRouter.get('/unfollow/:id', FollowControllers.unfollow)
+    v1MainRouter.get('/follow/:id', authenticate, FollowControllers.follow)
+    v1MainRouter.get('/unfollow/:id', authenticate, FollowControllers.unfollow)
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)

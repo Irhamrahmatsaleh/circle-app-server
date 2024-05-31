@@ -37,6 +37,7 @@ class UserServices {
                 data: this.DTOEditor(userDTO, requestedUser),
             })
 
+            delete editedUser.password
             return new ServiceResponseDTO<UserType>({
                 error: false,
                 payload: editedUser,

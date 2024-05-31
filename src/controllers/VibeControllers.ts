@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import { VibeType } from '../types/types'
 import VibeServices from '../services/VibeServices'
-import VibeDTO from '../dtos/VibeDTO'
 import ResponseDTO from '../dtos/ResponseDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 
@@ -57,9 +56,9 @@ class VibeControllers {
     }
 
     async getUserVibes(req: Request, res: Response) {
-        const { uid } = req.params
+        const { id } = req.params
 
-        const { error, payload } = await VibeServices.getUserVibes(+uid)
+        const { error, payload } = await VibeServices.getUserVibes(+id)
 
         if (error) {
             return res.status(500).json(
@@ -83,12 +82,14 @@ class VibeControllers {
     }
 
     async postVibes(req: Request, res: Response) {
-        const { content, image, authorId } = req.body
-        const vibeDTO = new VibeDTO({ content, image, authorId })
+        const loggedUser = res.locals.user
+        const { content, image } = req.body
 
-        const { error, payload }: ServiceResponseDTO<VibeType> = await VibeServices.postVibe(
-            vibeDTO
-        )
+        const { error, payload }: ServiceResponseDTO<VibeType> = await VibeServices.postVibe({
+            content,
+            image,
+            authorId: loggedUser.id,
+        })
 
         if (error) {
             return res.status(500).json(
