@@ -3,11 +3,12 @@ export interface UserType {
     username: string
     email: string
     name: string
-    password: string
+    password?: string
     avatar: string
     bio: string
     createdAt: Date
     updatedAt: Date
+    isFollowed?: boolean
 }
 
 export interface VibeType {

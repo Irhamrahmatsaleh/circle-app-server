@@ -8,6 +8,33 @@ import CircleError from '../utils/CircleError'
 const prisma = new PrismaClient()
 
 class UserServices {
+    async getUser(id: number, loggedUser: UserType): Promise<ServiceResponseDTO<UserType>> {
+        try {
+            const user: UserWithFollowersType = await prisma.user.findUnique({
+                where: {
+                    id: id,
+                },
+                include: {
+                    followers: true,
+                },
+            })
+
+            user.isFollowed = user.followers.some((follower) => follower.id === loggedUser.id)
+            delete user.password
+            delete user.followers
+
+            return new ServiceResponseDTO<UserType>({
+                error: false,
+                payload: user,
+            })
+        } catch (error) {
+            return new ServiceResponseDTO({
+                error: true,
+                payload: error,
+            })
+        }
+    }
+
     async getUsers(loggedUser: UserType): Promise<ServiceResponseDTO<UserType[]>> {
         try {
             const rawUsers: UserWithFollowersType[] = await prisma.user.findMany({
