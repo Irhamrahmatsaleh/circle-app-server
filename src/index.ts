@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import express from 'express'
 import cors from 'cors'
+
 import VibeControllers from './controllers/VibeControllers'
 import AuthControllers from './controllers/AuthControllers'
 import ReplyControllers from './controllers/ReplyControllers'
@@ -8,6 +9,7 @@ import LikeControllers from './controllers/LikeControllers'
 import UserControllers from './controllers/UserControllers'
 import FollowControllers from './controllers/FollowControllers'
 import authenticate from './middlewares/authenticate'
+import uploader from './middlewares/upload'
 
 const prisma = new PrismaClient()
 
@@ -17,6 +19,7 @@ const port = 8787
 
 app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use('/v1', v1MainRouter)
 
 async function main() {
@@ -28,7 +31,7 @@ async function main() {
     v1MainRouter.get('/vibes', authenticate, VibeControllers.getVibes)
     v1MainRouter.get('/vibes/:id', authenticate, VibeControllers.getVibe)
     v1MainRouter.get('/vibes/user/:id', authenticate, VibeControllers.getUserVibes)
-    v1MainRouter.post('/vibes', authenticate, VibeControllers.postVibes)
+    v1MainRouter.post('/vibes', uploader.single('image'), authenticate, VibeControllers.postVibes)
     v1MainRouter.delete('/vibes/:id', authenticate, VibeControllers.deleteVibe)
 
     v1MainRouter.post('/replies', authenticate, ReplyControllers.postReply)

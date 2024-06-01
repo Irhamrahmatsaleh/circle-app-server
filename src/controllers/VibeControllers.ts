@@ -86,7 +86,8 @@ class VibeControllers {
 
     async postVibes(req: Request, res: Response) {
         const loggedUser = res.locals.user
-        const { content, image } = req.body
+        const image = req.file?.path || null
+        const { content } = req.body
 
         const { error, payload }: ServiceResponseDTO<VibeType> = await VibeServices.postVibe({
             content,
