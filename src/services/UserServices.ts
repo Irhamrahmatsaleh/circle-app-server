@@ -35,6 +35,27 @@ class UserServices {
         }
     }
 
+    async getLoggedUser(loggedUser: UserType): Promise<ServiceResponseDTO<UserType>> {
+        try {
+            const user: UserType = await prisma.user.findUnique({
+                where: {
+                    id: loggedUser.id,
+                },
+            })
+
+            delete user.password
+            return new ServiceResponseDTO<UserType>({
+                error: false,
+                payload: user,
+            })
+        } catch (error) {
+            return new ServiceResponseDTO({
+                error: true,
+                payload: error,
+            })
+        }
+    }
+
     async getUsers(loggedUser: UserType): Promise<ServiceResponseDTO<UserType[]>> {
         try {
             const rawUsers: UserWithFollowersType[] = await prisma.user.findMany({
