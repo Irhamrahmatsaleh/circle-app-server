@@ -14,7 +14,6 @@ export interface VibeType {
     id: number
     content: string
     image: string
-    totalReply: number
     createdAt: Date
     updatedAt: Date
     authorId: number
@@ -25,7 +24,7 @@ export interface ReplyType {
     image: string
     content: string
     authorId: number
-    vibeId: number
+    targetId: number
     createdAt: Date
     updatedAt: Date
 }
@@ -33,7 +32,7 @@ export interface ReplyType {
 export interface LikeType {
     id: number
     authorId: number
-    vibeId: number
+    targetId: number
     createdAt: Date
     updatedAt: Date
 }
@@ -49,4 +48,15 @@ export interface FollowType {
 export interface ServiceResponseType<T> {
     error: boolean
     payload: T | object
+}
+
+export interface UserWithFollowersType extends UserType {
+    followers?: FollowType[]
+}
+
+export interface VibeWithDetailType extends VibeType {
+    replies?: ReplyType[]
+    likes?: LikeType[]
+    totalReplies?: number
+    totalLikes?: number
 }

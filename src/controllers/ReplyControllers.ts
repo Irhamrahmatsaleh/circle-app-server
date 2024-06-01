@@ -7,11 +7,11 @@ import ResponseDTO from '../dtos/ResponseDTO'
 class ReplyControllers {
     async postReply(req: Request, res: Response) {
         const loggedUser = res.locals.user
-        const { image, content, vibeId } = req.body
+        const { image, content, targetId } = req.body
         const { error, payload }: ServiceResponseDTO<ReplyType> = await ReplyServices.postReply({
             image,
             content,
-            vibeId,
+            targetId,
             authorId: loggedUser.id,
         })
 

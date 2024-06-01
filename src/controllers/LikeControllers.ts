@@ -7,10 +7,10 @@ import ResponseDTO from '../dtos/ResponseDTO'
 class LikeControllers {
     async likeMechanism(req: Request, res: Response) {
         const loggedUser = res.locals.user
-        const { vibeId } = req.body
+        const { targetId } = req.body
 
         const { error, payload }: ServiceResponseDTO<LikeType> = await LikeServices.likeMechanism({
-            vibeId,
+            targetId,
             authorId: loggedUser.id,
         })
 

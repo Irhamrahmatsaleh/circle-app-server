@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { VibeType } from '../types/types'
+import { VibeType, VibeWithDetailType } from '../types/types'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import VibeDTO from '../dtos/VibeDTO'
 import CircleError from '../utils/CircleError'
@@ -9,7 +9,22 @@ const prisma = new PrismaClient()
 class VibeServices {
     async getVibes(): Promise<ServiceResponseDTO<VibeType[]>> {
         try {
-            const vibes = await prisma.vibe.findMany()
+            const rawVibes: VibeWithDetailType[] = await prisma.vibe.findMany({
+                include: {
+                    replies: true,
+                    likes: true,
+                },
+            })
+
+            const vibes = rawVibes.map((vibe) => {
+                const { replies, likes, ...rest } = vibe
+
+                return {
+                    ...rest,
+                    totalReplies: replies.length,
+                    totalLikes: likes.length,
+                }
+            })
 
             return new ServiceResponseDTO<VibeType[]>({
                 error: false,
@@ -25,19 +40,31 @@ class VibeServices {
 
     async getVibe(id: number): Promise<ServiceResponseDTO<VibeType>> {
         try {
-            const requestedVibe = await prisma.vibe.findUnique({
+            const rawVibes: VibeWithDetailType[] = await prisma.vibe.findMany({
                 where: {
                     id: id,
                 },
+                include: {
+                    replies: true,
+                    likes: true,
+                },
             })
 
-            if (!requestedVibe) {
+            if (!rawVibes.length) {
                 throw new CircleError({ error: 'Requested vibe does not exist.' })
             }
 
+            const vibes = rawVibes.map((vibe) => {
+                return {
+                    ...vibe,
+                    totalReplies: vibe.replies.length,
+                    totalLikes: vibe.likes.length,
+                }
+            })
+
             return new ServiceResponseDTO<VibeType>({
                 error: false,
-                payload: requestedVibe,
+                payload: vibes,
             })
         } catch (error) {
             return new ServiceResponseDTO({
@@ -47,21 +74,34 @@ class VibeServices {
         }
     }
 
-    async getUserVibes(uid: number): Promise<ServiceResponseDTO<VibeType>> {
+    async getUserVibes(id: number): Promise<ServiceResponseDTO<VibeType>> {
         try {
-            const requestedUserVibes = await prisma.vibe.findMany({
+            const rawVibes: VibeWithDetailType[] = await prisma.vibe.findMany({
                 where: {
-                    authorId: uid,
+                    authorId: id,
+                },
+                include: {
+                    replies: true,
+                    likes: true,
                 },
             })
 
-            if (!requestedUserVibes.length) {
+            if (!rawVibes.length) {
                 throw new CircleError({ error: 'Requested user does not have any vibes.' })
             }
+            const vibes = rawVibes.map((vibe) => {
+                const { replies, likes, ...rest } = vibe
+
+                return {
+                    ...rest,
+                    totalReplies: replies.length,
+                    totalLikes: likes.length,
+                }
+            })
 
             return new ServiceResponseDTO<VibeType>({
                 error: false,
-                payload: requestedUserVibes,
+                payload: vibes,
             })
         } catch (error) {
             return new ServiceResponseDTO({

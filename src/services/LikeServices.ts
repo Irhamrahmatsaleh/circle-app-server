@@ -37,7 +37,7 @@ class LikeServices {
     private async isLiked(likeDTO: LikeDTO): Promise<LikeType> {
         return await prisma.like.findFirst({
             where: {
-                AND: [{ authorId: likeDTO.authorId }, { vibeId: likeDTO.vibeId }],
+                AND: [{ authorId: likeDTO.authorId }, { targetId: likeDTO.targetId }],
             },
         })
     }

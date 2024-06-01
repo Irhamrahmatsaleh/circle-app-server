@@ -1,28 +1,24 @@
 import { PrismaClient } from '@prisma/client'
-import { UserType, FollowType } from '../types/types'
+import { UserType, UserWithFollowersType } from '../types/types'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import UserDTO from '../dtos/UserDTO'
 
 const prisma = new PrismaClient()
-
-export interface UserWithFollowersType extends UserType {
-    Followers?: FollowType[]
-}
 
 class UserServices {
     async getUsers(loggedUser: UserType): Promise<ServiceResponseDTO<UserType[]>> {
         try {
             const rawUsers: UserWithFollowersType[] = await prisma.user.findMany({
                 include: {
-                    Followers: true,
+                    followers: true,
                 },
             })
 
             const users: UserType[] = rawUsers
                 .filter((user) => user.id !== loggedUser.id)
                 .map((user) => {
-                    const followers = user.Followers
-                    delete user.Followers
+                    const followers = user.followers
+                    delete user.followers
                     delete user.password
 
                     if (followers.length) {

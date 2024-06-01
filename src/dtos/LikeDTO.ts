@@ -1,10 +1,10 @@
 class LikeDTO {
     authorId: number
-    vibeId: number
+    targetId: number
 
-    constructor({ authorId, vibeId }) {
+    constructor({ authorId, targetId }) {
         this.authorId = authorId
-        this.vibeId = vibeId
+        this.targetId = targetId
     }
 }
 

@@ -21,8 +21,8 @@ model User {
   vibes         Vibe[]    @relation("UserVibes")
   replies       Reply[]   @relation("UserReplies")
   likes         Like[]    @relation("UserLikes")
-  Followings    Follow[]  @relation("UserFollowing")
-  Followers     Follow[]  @relation("UserFollowers")
+  followings    Follow[]  @relation("UserFollowing")
+  followers     Follow[]  @relation("UserFollowers")
 
   @@map("users")
 }
@@ -31,7 +31,6 @@ model Vibe {
   id            Int       @id @default(autoincrement())
   content       String
   image         String?
-  totalReply    Int       @default(0)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -53,8 +52,8 @@ model Reply {
 
   repliedBy   User      @relation(fields: [authorId], references: [id], name: "UserReplies")
   authorId    Int
-  replies     Vibe      @relation(fields: [vibeId], references: [id], name: "VibeReplies")
-  vibeId      Int
+  repliedTo   Vibe      @relation(fields: [targetId], references: [id], name: "VibeReplies")
+  targetId    Int
 
   @@map("replies")
 }
@@ -66,8 +65,8 @@ model Like {
 
   likedBy     User      @relation(fields: [authorId], references: [id], name: "UserLikes")
   authorId    Int
-  likes       Vibe      @relation(fields: [vibeId], references: [id], name: "VibeLikes")
-  vibeId      Int
+  likedOn     Vibe      @relation(fields: [targetId], references: [id], name: "VibeLikes")
+  targetId    Int
 
   @@map("likes")
 }
