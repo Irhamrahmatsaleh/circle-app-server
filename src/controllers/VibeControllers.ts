@@ -1,12 +1,13 @@
 import { Request, Response } from 'express'
-import { VibeType } from '../types/types'
+import { VibeType, VibeWithDetailType } from '../types/types'
 import VibeServices from '../services/VibeServices'
 import ResponseDTO from '../dtos/ResponseDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 
 class VibeControllers {
     async getVibes(req: Request, res: Response) {
-        const { error, payload }: ServiceResponseDTO<VibeType[]> = await VibeServices.getVibes()
+        const { error, payload }: ServiceResponseDTO<VibeWithDetailType[]> =
+            await VibeServices.getVibes()
 
         if (error) {
             return res.status(500).json(
@@ -19,7 +20,7 @@ class VibeControllers {
         }
 
         return res.status(200).json(
-            new ResponseDTO<VibeType>({
+            new ResponseDTO<VibeWithDetailType>({
                 error,
                 message: {
                     status: 'Vibes retrieved!',
@@ -32,7 +33,8 @@ class VibeControllers {
     async getVibe(req: Request, res: Response) {
         const { id } = req.params
 
-        const { error, payload }: ServiceResponseDTO<VibeType> = await VibeServices.getVibe(+id)
+        const { error, payload }: ServiceResponseDTO<VibeWithDetailType> =
+            await VibeServices.getVibe(+id)
 
         if (error) {
             return res.status(500).json(
@@ -45,7 +47,7 @@ class VibeControllers {
         }
 
         return res.status(200).json(
-            new ResponseDTO<VibeType>({
+            new ResponseDTO<VibeWithDetailType>({
                 error,
                 message: {
                     status: 'Vibe retrieved!',
@@ -58,7 +60,8 @@ class VibeControllers {
     async getUserVibes(req: Request, res: Response) {
         const { id } = req.params
 
-        const { error, payload } = await VibeServices.getUserVibes(+id)
+        const { error, payload }: ServiceResponseDTO<VibeWithDetailType[]> =
+            await VibeServices.getUserVibes(+id)
 
         if (error) {
             return res.status(500).json(
@@ -71,7 +74,7 @@ class VibeControllers {
         }
 
         return res.status(200).json(
-            new ResponseDTO<VibeType[]>({
+            new ResponseDTO<VibeWithDetailType[]>({
                 error,
                 message: {
                     status: "User's vibes retrieved!",

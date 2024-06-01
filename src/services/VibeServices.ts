@@ -3,11 +3,12 @@ import { VibeType, VibeWithDetailType } from '../types/types'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import VibeDTO from '../dtos/VibeDTO'
 import CircleError from '../utils/CircleError'
+import { vibeSchema } from '../validators/validators'
 
 const prisma = new PrismaClient()
 
 class VibeServices {
-    async getVibes(): Promise<ServiceResponseDTO<VibeType[]>> {
+    async getVibes(): Promise<ServiceResponseDTO<VibeWithDetailType[]>> {
         try {
             const rawVibes: VibeWithDetailType[] = await prisma.vibe.findMany({
                 include: {
@@ -26,7 +27,7 @@ class VibeServices {
                 }
             })
 
-            return new ServiceResponseDTO<VibeType[]>({
+            return new ServiceResponseDTO<VibeWithDetailType[]>({
                 error: false,
                 payload: vibes,
             })
@@ -38,7 +39,7 @@ class VibeServices {
         }
     }
 
-    async getVibe(id: number): Promise<ServiceResponseDTO<VibeType>> {
+    async getVibe(id: number): Promise<ServiceResponseDTO<VibeWithDetailType>> {
         try {
             const rawVibes: VibeWithDetailType[] = await prisma.vibe.findMany({
                 where: {
@@ -62,7 +63,7 @@ class VibeServices {
                 }
             })
 
-            return new ServiceResponseDTO<VibeType>({
+            return new ServiceResponseDTO<VibeWithDetailType>({
                 error: false,
                 payload: vibes,
             })
@@ -74,7 +75,7 @@ class VibeServices {
         }
     }
 
-    async getUserVibes(id: number): Promise<ServiceResponseDTO<VibeType>> {
+    async getUserVibes(id: number): Promise<ServiceResponseDTO<VibeWithDetailType[]>> {
         try {
             const rawVibes: VibeWithDetailType[] = await prisma.vibe.findMany({
                 where: {
@@ -99,7 +100,7 @@ class VibeServices {
                 }
             })
 
-            return new ServiceResponseDTO<VibeType>({
+            return new ServiceResponseDTO<VibeWithDetailType[]>({
                 error: false,
                 payload: vibes,
             })
@@ -113,6 +114,12 @@ class VibeServices {
 
     async postVibe(vibeDTO: VibeDTO): Promise<ServiceResponseDTO<VibeType>> {
         try {
+            const { error } = vibeSchema.validate(vibeDTO)
+
+            if (error) {
+                throw new CircleError({ error: error.details[0].message })
+            }
+
             const postedVibe = await prisma.vibe.create({
                 data: vibeDTO,
             })

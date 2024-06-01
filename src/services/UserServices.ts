@@ -2,6 +2,8 @@ import { PrismaClient } from '@prisma/client'
 import { UserType, UserWithFollowersType } from '../types/types'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import UserDTO from '../dtos/UserDTO'
+import { userSchema } from '../validators/validators'
+import CircleError from '../utils/CircleError'
 
 const prisma = new PrismaClient()
 
@@ -50,6 +52,12 @@ class UserServices {
 
     async editUser(userDTO: UserDTO): Promise<ServiceResponseDTO<UserType>> {
         try {
+            const { error } = userSchema.validate(userDTO)
+
+            if (error) {
+                throw new CircleError({ error: error.details[0].message })
+            }
+
             const requestedUser = await prisma.user.findUnique({
                 where: {
                     id: userDTO.id,

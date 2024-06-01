@@ -2,12 +2,20 @@ import { PrismaClient } from '@prisma/client'
 import { ReplyType } from '../types/types'
 import ReplyDTO from '../dtos/ReplyDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
+import { replySchema } from '../validators/validators'
+import CircleError from '../utils/CircleError'
 
 const prisma = new PrismaClient()
 
 class ReplyServices {
     async postReply(replyDTO: ReplyDTO): Promise<ServiceResponseDTO<ReplyType>> {
         try {
+            const { error } = replySchema.validate(replyDTO)
+
+            if (error) {
+                throw new CircleError({ error: error.details[0].message })
+            }
+
             const postedReply = await prisma.reply.create({
                 data: replyDTO,
             })

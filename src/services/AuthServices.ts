@@ -9,12 +9,24 @@ import LoginDTO from '../dtos/LoginDTO'
 import CircleError from '../utils/CircleError'
 import ForgotPasswordDTO from '../dtos/ForgotPasswordDTO'
 import ResetPasswordDTO from '../dtos/ResetPasswordDTO'
+import {
+    forgotPasswordSchema,
+    loginSchema,
+    registerSchema,
+    resetPasswordSchema,
+} from '../validators/validators'
 
 const prisma = new PrismaClient()
 
 class AuthServices {
     async register(registerDTO: RegisterDTO): Promise<ServiceResponseDTO<UserType>> {
         try {
+            const { error } = registerSchema.validate(registerDTO)
+
+            if (error) {
+                throw new CircleError({ error: error.details[0].message })
+            }
+
             const user = await prisma.user.create({
                 data: {
                     ...registerDTO,
@@ -37,6 +49,12 @@ class AuthServices {
 
     async login(loginDTO: LoginDTO): Promise<ServiceResponseDTO<string>> {
         try {
+            const { error } = loginSchema.validate(loginDTO)
+
+            if (error) {
+                throw new CircleError({ error: error.details[0].message })
+            }
+
             const requestedUser = await prisma.user.findUnique({
                 where: {
                     username: loginDTO.username,
@@ -71,6 +89,12 @@ class AuthServices {
         forgotPasswordDTO: ForgotPasswordDTO
     ): Promise<ServiceResponseDTO<string>> {
         try {
+            const { error } = forgotPasswordSchema.validate(forgotPasswordDTO)
+
+            if (error) {
+                throw new CircleError({ error: error.details[0].message })
+            }
+
             const requestedUser = await prisma.user.findUnique({
                 where: {
                     email: forgotPasswordDTO.email,
@@ -98,6 +122,12 @@ class AuthServices {
 
     async resetPassword(resetPasswordDTO: ResetPasswordDTO): Promise<ServiceResponseDTO<string>> {
         try {
+            const { error } = resetPasswordSchema.validate(resetPasswordDTO)
+
+            if (error) {
+                throw new CircleError({ error: error.details[0].message })
+            }
+
             const updatedUser = await prisma.user.update({
                 where: {
                     email: resetPasswordDTO.email,
