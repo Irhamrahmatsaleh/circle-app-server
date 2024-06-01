@@ -34,7 +34,8 @@ class UserControllers {
 
     async editUser(req: Request, res: Response) {
         const loggedUser = res.locals.user
-        const { username, name, avatar, bio } = req.body
+        const avatar = req.file?.path
+        const { username, name, bio } = req.body
 
         const { error, payload }: ServiceResponseDTO<UserType> = await UserServices.editUser({
             id: loggedUser.id,

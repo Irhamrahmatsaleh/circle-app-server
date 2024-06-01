@@ -1,18 +1,22 @@
 import { Request, Response } from 'express'
 import { UserType } from '../types/types'
-import RegisterDTO from '../dtos/RegisterDTO'
 import ResponseDTO from '../dtos/ResponseDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import AuthServices from '../services/AuthServices'
 
 class AuthControllers {
     async register(req: Request, res: Response) {
-        const { username, email, name, password, avatar, bio } = req.body
-        const userDTO = new RegisterDTO({ username, email, name, password, avatar, bio })
+        const avatar = 'https://api.dicebear.com/8.x/thumbs/svg?seed=Boots'
+        const { username, email, name, password, bio } = req.body
 
-        const { error, payload }: ServiceResponseDTO<UserType> = await AuthServices.register(
-            userDTO
-        )
+        const { error, payload }: ServiceResponseDTO<UserType> = await AuthServices.register({
+            username,
+            email,
+            name,
+            password,
+            avatar,
+            bio,
+        })
 
         if (error) {
             return res.status(500).json(

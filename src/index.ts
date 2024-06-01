@@ -34,15 +34,26 @@ async function main() {
     v1MainRouter.post('/vibes', uploader.single('image'), authenticate, VibeControllers.postVibes)
     v1MainRouter.delete('/vibes/:id', authenticate, VibeControllers.deleteVibe)
 
-    v1MainRouter.post('/replies', authenticate, ReplyControllers.postReply)
-    v1MainRouter.delete('/replies/:id', authenticate, ReplyControllers.deleteReply)
+    v1MainRouter.get('/follow/:id', authenticate, FollowControllers.follow)
+    v1MainRouter.get('/unfollow/:id', authenticate, FollowControllers.unfollow)
+
     v1MainRouter.post('/likes', authenticate, LikeControllers.likeMechanism)
 
     v1MainRouter.get('/users', authenticate, UserControllers.getUsers)
-    v1MainRouter.patch('/users/me', authenticate, UserControllers.editUser)
+    v1MainRouter.patch(
+        '/users/me',
+        uploader.single('avatar'),
+        authenticate,
+        UserControllers.editUser
+    )
 
-    v1MainRouter.get('/follow/:id', authenticate, FollowControllers.follow)
-    v1MainRouter.get('/unfollow/:id', authenticate, FollowControllers.unfollow)
+    v1MainRouter.delete('/replies/:id', authenticate, ReplyControllers.deleteReply)
+    v1MainRouter.post(
+        '/replies',
+        uploader.single('image'),
+        authenticate,
+        ReplyControllers.postReply
+    )
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)

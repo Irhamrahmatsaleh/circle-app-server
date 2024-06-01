@@ -9,6 +9,7 @@ const prisma = new PrismaClient()
 
 class ReplyServices {
     async postReply(replyDTO: ReplyDTO): Promise<ServiceResponseDTO<ReplyType>> {
+        console.log(replyDTO)
         try {
             const { error } = replySchema.validate(replyDTO)
 
