@@ -44,6 +44,8 @@ class UserServices {
             })
 
             delete user.password
+            delete user.createdAt
+            delete user.updatedAt
             return new ServiceResponseDTO<UserType>({
                 error: false,
                 payload: user,

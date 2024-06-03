@@ -15,7 +15,7 @@ class AuthControllers {
             name,
             password,
             avatar,
-            bio,
+            bio: bio ? bio : null,
         })
 
         if (error) {
@@ -29,7 +29,7 @@ class AuthControllers {
         }
 
         delete payload.password
-        return res.status(500).json(
+        return res.status(200).json(
             new ResponseDTO<UserType>({
                 error,
                 message: {
