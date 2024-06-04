@@ -1,9 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 import { VibeType, VibeWithDetailType } from '../types/types'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import VibeDTO from '../dtos/VibeDTO'
 import CircleError from '../utils/CircleError'
 import { vibeSchema } from '../validators/validators'
+import primsaErrorHandler from '../utils/PrismaError'
 
 const prisma = new PrismaClient()
 
@@ -32,6 +33,12 @@ class VibeServices {
                 payload: vibes,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,
@@ -68,6 +75,12 @@ class VibeServices {
                 payload: vibes,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,
@@ -105,6 +118,12 @@ class VibeServices {
                 payload: vibes,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,
@@ -129,6 +148,12 @@ class VibeServices {
                 payload: postedVibe,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,
@@ -149,6 +174,12 @@ class VibeServices {
                 payload: deletedVibes,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,

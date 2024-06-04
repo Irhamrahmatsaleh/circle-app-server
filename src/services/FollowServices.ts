@@ -1,8 +1,9 @@
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 import { FollowType } from '../types/types'
 import FollowDTO from '../dtos/FollowDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import CircleError from '../utils/CircleError'
+import primsaErrorHandler from '../utils/PrismaError'
 
 const prisma = new PrismaClient()
 
@@ -26,6 +27,12 @@ class FollowServices {
                 payload: createdFollow,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,
@@ -56,6 +63,12 @@ class FollowServices {
                 payload: createdUnfollow,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,

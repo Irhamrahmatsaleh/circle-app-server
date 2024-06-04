@@ -1,9 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 import { UserType, UserWithFollowersType } from '../types/types'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import UserDTO from '../dtos/UserDTO'
 import { userSchema } from '../validators/validators'
 import CircleError from '../utils/CircleError'
+import primsaErrorHandler from '../utils/PrismaError'
 
 const prisma = new PrismaClient()
 
@@ -28,6 +29,12 @@ class UserServices {
                 payload: user,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,
@@ -51,6 +58,12 @@ class UserServices {
                 payload: user,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,
@@ -93,6 +106,12 @@ class UserServices {
                 payload: users,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,
@@ -127,6 +146,12 @@ class UserServices {
                 payload: editedUser,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,

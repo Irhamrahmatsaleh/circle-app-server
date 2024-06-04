@@ -1,7 +1,8 @@
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 import { LikeType } from '../types/types'
 import LikeDTO from '../dtos/LikeDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
+import primsaErrorHandler from '../utils/PrismaError'
 
 const prisma = new PrismaClient()
 
@@ -27,6 +28,12 @@ class LikeServices {
                 payload: addedLike,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,
