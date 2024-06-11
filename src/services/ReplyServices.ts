@@ -10,7 +10,6 @@ const prisma = new PrismaClient()
 
 class ReplyServices {
     async postReply(replyDTO: ReplyDTO): Promise<ServiceResponseDTO<ReplyType>> {
-        console.log(replyDTO)
         try {
             const { error } = replySchema.validate(replyDTO)
 
@@ -21,6 +20,8 @@ class ReplyServices {
             const postedReply = await prisma.reply.create({
                 data: replyDTO,
             })
+
+            delete postedReply.updatedAt
 
             return new ServiceResponseDTO<ReplyType>({
                 error: false,

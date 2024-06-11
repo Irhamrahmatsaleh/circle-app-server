@@ -6,7 +6,8 @@ import AuthServices from '../services/AuthServices'
 
 class AuthControllers {
     async register(req: Request, res: Response) {
-        const avatar = 'https://api.dicebear.com/8.x/thumbs/svg?seed=Boots'
+        const avatar =
+            'https://api.dicebear.com/8.x/thumbs/svg?seed=Lucy&backgroundColor=f1f4dc&translateX=-5&shapeColor=f1f4dc'
         const { username, email, name, password, bio } = req.body
 
         const { error, payload }: ServiceResponseDTO<UserType> = await AuthServices.register({
@@ -102,10 +103,11 @@ class AuthControllers {
     }
 
     async resetPassword(req: Request, res: Response) {
-        const { email, password } = req.body
+        const requester = res.locals.user
+        const { password } = req.body
 
         const { error, payload }: ServiceResponseDTO<string> = await AuthServices.resetPassword({
-            email,
+            email: requester.email,
             password,
         })
 

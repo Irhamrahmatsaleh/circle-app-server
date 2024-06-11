@@ -118,7 +118,9 @@ class AuthServices {
             })
 
             if (!requestedUser) {
-                throw new CircleError({ error: 'Requested user does not exist.' })
+                throw new CircleError({
+                    error: `User with ${forgotPasswordDTO.email} does not exist.`,
+                })
             }
 
             delete requestedUser.password

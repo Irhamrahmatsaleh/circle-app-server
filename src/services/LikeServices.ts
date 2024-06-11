@@ -15,6 +15,9 @@ class LikeServices {
             if (isLiked) {
                 // unlike the vibe
                 const removedLike: LikeType = await this.removeLike(isLiked)
+                delete removedLike.createdAt
+                delete removedLike.updatedAt
+
                 return new ServiceResponseDTO<LikeType>({
                     error: false,
                     payload: removedLike,
@@ -23,6 +26,9 @@ class LikeServices {
 
             // like the vibe
             const addedLike: LikeType = await this.addLike(likeDTO)
+            delete addedLike.createdAt
+            delete addedLike.updatedAt
+
             return new ServiceResponseDTO<LikeType>({
                 error: false,
                 payload: addedLike,

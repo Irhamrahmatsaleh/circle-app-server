@@ -6,8 +6,10 @@ import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 
 class VibeControllers {
     async getVibes(req: Request, res: Response) {
+        const loggedUser = res.locals.user
+
         const { error, payload }: ServiceResponseDTO<VibeWithDetailType[]> =
-            await VibeServices.getVibes()
+            await VibeServices.getVibes(loggedUser)
 
         if (error) {
             return res.status(500).json(
@@ -31,10 +33,11 @@ class VibeControllers {
     }
 
     async getVibe(req: Request, res: Response) {
+        const loggedUser = res.locals.user
         const { id } = req.params
 
         const { error, payload }: ServiceResponseDTO<VibeWithDetailType> =
-            await VibeServices.getVibe(+id)
+            await VibeServices.getVibe(+id, loggedUser)
 
         if (error) {
             return res.status(500).json(

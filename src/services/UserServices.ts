@@ -1,5 +1,5 @@
 import { Prisma, PrismaClient } from '@prisma/client'
-import { UserType, UserWithFollowersType } from '../types/types'
+import { UserType, UserWithDetailype } from '../types/types'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import UserDTO from '../dtos/UserDTO'
 import { userSchema } from '../validators/validators'
@@ -11,7 +11,7 @@ const prisma = new PrismaClient()
 class UserServices {
     async getUser(id: number, loggedUser: UserType): Promise<ServiceResponseDTO<UserType>> {
         try {
-            const user: UserWithFollowersType = await prisma.user.findUnique({
+            const user: UserWithDetailype = await prisma.user.findUnique({
                 where: {
                     id: id,
                 },
@@ -21,8 +21,11 @@ class UserServices {
             })
 
             user.isFollowed = user.followers.some((follower) => follower.id === loggedUser.id)
+
             delete user.password
             delete user.followers
+            delete user.createdAt
+            delete user.updatedAt
 
             return new ServiceResponseDTO<UserType>({
                 error: false,
@@ -44,15 +47,51 @@ class UserServices {
 
     async getLoggedUser(loggedUser: UserType): Promise<ServiceResponseDTO<UserType>> {
         try {
-            const user: UserType = await prisma.user.findUnique({
+            const rawUser: UserWithDetailype = await prisma.user.findUnique({
                 where: {
                     id: loggedUser.id,
                 },
+                include: {
+                    followers: true,
+                    followings: true,
+                    vibes: {
+                        include: {
+                            replies: true,
+                            likes: true,
+                        },
+                    },
+                },
             })
+
+            const user = {
+                ...rawUser,
+                totalFollower: rawUser.followers.length,
+                totalFollowing: rawUser.followings.length,
+                vibes: rawUser.vibes.map((vibe) => {
+                    const replies = vibe.replies
+                    const likes = vibe.likes
+
+                    delete vibe.createdAt
+                    delete vibe.replies
+                    delete vibe.likes
+
+                    delete loggedUser.createdAt
+                    delete loggedUser.updatedAt
+
+                    return {
+                        ...vibe,
+                        author: loggedUser,
+                        totalReplies: replies.length,
+                        totalLikes: likes.length,
+                        isLiked: likes.some((like) => like.authorId === loggedUser.id),
+                    }
+                }),
+            }
 
             delete user.password
             delete user.createdAt
             delete user.updatedAt
+
             return new ServiceResponseDTO<UserType>({
                 error: false,
                 payload: user,
@@ -73,33 +112,31 @@ class UserServices {
 
     async getUsers(loggedUser: UserType): Promise<ServiceResponseDTO<UserType[]>> {
         try {
-            const rawUsers: UserWithFollowersType[] = await prisma.user.findMany({
+            const rawUsers: UserWithDetailype[] = await prisma.user.findMany({
                 include: {
                     followers: true,
                 },
             })
 
-            const users: UserType[] = rawUsers
-                .filter((user) => user.id !== loggedUser.id)
-                .map((user) => {
-                    const followers = user.followers
-                    delete user.followers
-                    delete user.password
+            const users: UserWithDetailype[] = rawUsers.map((user) => {
+                const followers = user.followers
 
-                    if (followers.length) {
-                        return {
-                            ...user,
-                            isFollowed: followers.some(
-                                (follower) => follower.ownerId === loggedUser.id
-                            ),
-                        }
-                    }
+                delete user.password
 
+                if (followers.length) {
                     return {
                         ...user,
-                        isFollowed: false,
+                        isFollowed: followers.some(
+                            (follower) => follower.ownerId === loggedUser.id
+                        ),
                     }
-                })
+                }
+
+                return {
+                    ...user,
+                    isFollowed: false,
+                }
+            })
 
             return new ServiceResponseDTO<UserType[]>({
                 error: false,
@@ -141,6 +178,9 @@ class UserServices {
             })
 
             delete editedUser.password
+            delete editedUser.updatedAt
+            delete editedUser.createdAt
+
             return new ServiceResponseDTO<UserType>({
                 error: false,
                 payload: editedUser,
