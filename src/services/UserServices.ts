@@ -1,10 +1,11 @@
 import { Prisma, PrismaClient } from '@prisma/client'
 import { UserType, UserWithDetailype } from '../types/types'
+import { userSchema } from '../validators/validators'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import UserDTO from '../dtos/UserDTO'
-import { userSchema } from '../validators/validators'
 import CircleError from '../utils/CircleError'
 import primsaErrorHandler from '../utils/PrismaError'
+import SearchDTO from '../dtos/SearchDTO'
 
 const prisma = new PrismaClient()
 
@@ -20,7 +21,7 @@ class UserServices {
                 },
             })
 
-            user.isFollowed = user.followers.some((follower) => follower.id === loggedUser.id)
+            user.isFollowed = user.followers.some((follower) => follower.ownerId === loggedUser.id)
 
             delete user.password
             delete user.followers
@@ -184,6 +185,60 @@ class UserServices {
             return new ServiceResponseDTO<UserType>({
                 error: false,
                 payload: editedUser,
+            })
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
+            return new ServiceResponseDTO({
+                error: true,
+                payload: error,
+            })
+        }
+    }
+
+    async searchUser(searchDTO: SearchDTO, loggedUser: UserType) {
+        try {
+            if (!searchDTO.keyword) {
+                return new ServiceResponseDTO<UserWithDetailype[]>({
+                    error: false,
+                    payload: [],
+                })
+            }
+
+            const rawResult: UserWithDetailype[] = await prisma.user.findMany({
+                where: {
+                    username: {
+                        contains: searchDTO.keyword,
+                        mode: 'insensitive',
+                    },
+                    id: {
+                        not: loggedUser.id,
+                    },
+                },
+                include: {
+                    followers: true,
+                },
+            })
+
+            const result = rawResult.map((result) => {
+                delete result.password
+                delete result.createdAt
+                delete result.updatedAt
+
+                result.isFollowed = result.followers.some(
+                    (follower) => follower.ownerId === loggedUser.id
+                )
+
+                return result
+            })
+
+            return new ServiceResponseDTO<UserWithDetailype[]>({
+                error: false,
+                payload: result,
             })
         } catch (error) {
             if (error instanceof Prisma.PrismaClientKnownRequestError) {
