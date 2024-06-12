@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 import { UserType } from '../types/types'
 import { SECRET_SAUCE } from '../configs/config'
 import jwt from 'jsonwebtoken'
@@ -15,6 +15,7 @@ import {
     registerSchema,
     resetPasswordSchema,
 } from '../validators/validators'
+import primsaErrorHandler from '../utils/PrismaError'
 
 const prisma = new PrismaClient()
 
@@ -40,6 +41,12 @@ class AuthServices {
                 payload: user,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,
@@ -61,11 +68,14 @@ class AuthServices {
                 },
             })
 
+            if (!requestedUser) {
+                throw new CircleError({ error: 'The username/password was incorrect.' })
+            }
+
             const isPasswordValid = await Hasher.comparePassword(
                 loginDTO.password,
                 requestedUser.password
             )
-
             if (!isPasswordValid) {
                 throw new CircleError({ error: 'The username/password was incorrect.' })
             }
@@ -78,6 +88,12 @@ class AuthServices {
                 payload: token,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,
@@ -102,7 +118,9 @@ class AuthServices {
             })
 
             if (!requestedUser) {
-                throw new CircleError({ error: 'Requested user does not exist.' })
+                throw new CircleError({
+                    error: `User with ${forgotPasswordDTO.email} does not exist.`,
+                })
             }
 
             delete requestedUser.password
@@ -113,6 +131,12 @@ class AuthServices {
                 payload: token,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,
@@ -148,6 +172,12 @@ class AuthServices {
                 payload: token,
             })
         } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                return new ServiceResponseDTO({
+                    error: true,
+                    payload: primsaErrorHandler(error),
+                })
+            }
             return new ServiceResponseDTO({
                 error: true,
                 payload: error,

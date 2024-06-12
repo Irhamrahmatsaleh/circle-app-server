@@ -37,6 +37,7 @@ async function main() {
     v1MainRouter.get('/follow/:id', authenticate, FollowControllers.follow)
     v1MainRouter.get('/unfollow/:id', authenticate, FollowControllers.unfollow)
 
+    v1MainRouter.get('/find', authenticate, UserControllers.searchUser)
     v1MainRouter.post('/likes', authenticate, LikeControllers.likeMechanism)
     v1MainRouter.get('/me', authenticate, UserControllers.getLoggedUser)
 

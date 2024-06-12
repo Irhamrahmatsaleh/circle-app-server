@@ -51,8 +51,10 @@ export interface ServiceResponseType<T> {
     payload: T | object
 }
 
-export interface UserWithFollowersType extends UserType {
+export interface UserWithDetailype extends UserType {
     followers?: FollowType[]
+    followings?: FollowType[]
+    vibes?: VibeWithDetailType[]
 }
 
 export interface VibeWithDetailType extends VibeType {
@@ -60,4 +62,6 @@ export interface VibeWithDetailType extends VibeType {
     likes?: LikeType[]
     totalReplies?: number
     totalLikes?: number
+    isLiked?: boolean
+    author?: UserType
 }
