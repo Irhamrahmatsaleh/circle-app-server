@@ -1,6 +1,9 @@
 import { PrismaClient } from '@prisma/client'
+import { PORT } from './configs/config'
 import express from 'express'
 import cors from 'cors'
+import swaggerUI from 'swagger-ui-express'
+import swaggerDoc from './libs/swagger.json'
 
 import VibeControllers from './controllers/VibeControllers'
 import AuthControllers from './controllers/AuthControllers'
@@ -15,12 +18,32 @@ const prisma = new PrismaClient()
 
 const app = express()
 const v1MainRouter = express.Router()
-const port = 8787
+const port = PORT
 
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/v1', v1MainRouter)
+
+v1MainRouter.use('/', swaggerUI.serve)
+v1MainRouter.get(
+    '/',
+    swaggerUI.setup(swaggerDoc, {
+        customSiteTitle: 'Circle App API',
+        customfavIcon: 'NONE',
+        customCss: `
+                .swagger-ui .topbar { display: none } 
+                .information-container.wrapper { background: #8e3e63; padding: 2rem } 
+                .information-container .info { margin: 0 } 
+                .information-container .info .main { margin: 0 !important} 
+                .information-container .info .main .title { color: #ffffff} 
+                .renderedMarkdown p { margin: 0 !important; color: #ffffff !important }
+        `,
+        swaggerOptions: {
+            persistAuthorization: true,
+        },
+    })
+)
 
 async function main() {
     v1MainRouter.post('/register', AuthControllers.register)
