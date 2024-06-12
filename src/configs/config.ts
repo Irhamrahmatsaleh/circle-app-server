@@ -7,6 +7,9 @@ cloudinary.config({
     api_key: process.env.CLOUD_API_KEY,
     api_secret: process.env.CLOUD_API_SECRET,
 })
+
+export const LOCALHOST = process.env.LOCALHOST
+export const PORT = process.env.PORT
 export const SECRET_SAUCE = process.env.SECRET_SAUCE
 export const SALT_ROUND = process.env.SALT_ROUND
 
