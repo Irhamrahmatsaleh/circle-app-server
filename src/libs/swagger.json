@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://circle-app-server-production.up.railway.app/v1/"
+            "url": "https://circle-app-server-production.up.railway.app/"
         }
     ],
     "paths": {
