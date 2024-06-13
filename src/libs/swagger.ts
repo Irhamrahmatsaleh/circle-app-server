@@ -24,11 +24,11 @@ const doc = {
     servers: [
         {
             url: HOST,
-            description: 'PRODUCTION SERVER',
+            description: 'Production Server',
         },
         {
             url: LOCALHOST,
-            description: 'LOCAL SERVER',
+            description: 'Local Server',
         },
     ],
 }
