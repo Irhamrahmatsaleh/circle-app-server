@@ -9,6 +9,7 @@ cloudinary.config({
 })
 
 export const HOST = process.env.HOST
+export const LOCALHOST = process.env.LOCALHOST
 export const PORT = process.env.PORT
 export const SECRET_SAUCE = process.env.SECRET_SAUCE
 export const SALT_ROUND = process.env.SALT_ROUND
