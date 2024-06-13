@@ -5,6 +5,8 @@
     "type": "commonjs",
     "scripts": {
         "dev": "nodemon src/index.ts",
+        "build": "tsc && prisma generate",
+        "start": "node dist/index.js",
         "swagger:generate": "nodemon src/libs/swagger.ts"
     },
     "dependencies": {
@@ -37,7 +39,7 @@
         "prisma": "^5.14.0",
         "swagger-autogen": "^2.23.7",
         "ts-node": "^10.9.2",
-        "typescript": "^4.5.2",
+        "typescript": "^4.9.5",
         "typescript-eslint": "^7.11.0"
     }
 }
