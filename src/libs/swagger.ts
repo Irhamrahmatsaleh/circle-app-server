@@ -1,5 +1,5 @@
 import swaggerAutogen from 'swagger-autogen'
-import { HOST, LOCALHOST } from '../configs/config'
+import { HOST } from '../configs/config'
 
 const doc = {
     openapi: '3.0.0',
@@ -21,16 +21,7 @@ const doc = {
             bearerAuth: [],
         },
     ],
-    servers: [
-        {
-            url: HOST,
-            description: 'Production Server',
-        },
-        {
-            url: LOCALHOST,
-            description: 'Local Server',
-        },
-    ],
+    host: HOST,
 }
 
 const outputFile = './swagger.json'

@@ -7,12 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://circle-app-server-production.up.railway.app/v1/",
-            "description": "Production Server"
-        },
-        {
-            "url": "http://localhost:8787",
-            "description": "Local Server"
+            "url": "https://circle-app-server-production.up.railway.app/v1/"
         }
     ],
     "paths": {
