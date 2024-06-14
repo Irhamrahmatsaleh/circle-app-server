@@ -9,7 +9,7 @@ export let redisClient: RedisClientType<any, any, any>
 
 export async function initRedis() {
     redisClient = await createClient({
-        url: REDIS_URL,
+        url: `${REDIS_URL}`,
     })
         .on('error', (err) => {
             throw new CircleError({ error: `Redis client error: ${err}` })
