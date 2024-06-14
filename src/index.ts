@@ -1,6 +1,9 @@
 import { PrismaClient } from '@prisma/client'
 import { PORT } from './configs/config'
 import { initRedis } from './libs/redis'
+import { rateLimit } from 'express-rate-limit'
+import { RedisStore } from 'rate-limit-redis'
+import { redisClient } from './libs/redis'
 import express from 'express'
 import cors from 'cors'
 import swaggerUI from 'swagger-ui-express'
@@ -40,7 +43,7 @@ v1MainRouter.get(
                 .information-container .info .main { margin: 0 !important} 
                 .information-container .info .main .title { color: #ffffff} 
                 .renderedMarkdown p { margin: 0 !important; color: #ffffff !important }
-        `,
+                `,
         swaggerOptions: {
             persistAuthorization: true,
         },
@@ -48,6 +51,20 @@ v1MainRouter.get(
 )
 
 async function main() {
+    v1MainRouter.use(
+        rateLimit({
+            windowMs: 15 * 60 * 1000, // 15 mins
+            limit: 100,
+            standardHeaders: 'draft-7',
+            legacyHeaders: false,
+            store: new RedisStore({
+                sendCommand: (...args: string[]) => {
+                    return redisClient.sendCommand(args)
+                },
+            }),
+        })
+    )
+
     v1MainRouter.post('/register', AuthControllers.register)
     v1MainRouter.post('/login', AuthControllers.login)
     v1MainRouter.post('/auth/forgot', AuthControllers.forgotPassword)
