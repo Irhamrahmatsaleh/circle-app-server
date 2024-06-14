@@ -3,6 +3,7 @@ import { VibeType, VibeWithDetailType } from '../types/types'
 import VibeServices from '../services/VibeServices'
 import ResponseDTO from '../dtos/ResponseDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
+import Redis from '../middlewares/redis'
 
 class VibeControllers {
     async getVibes(req: Request, res: Response) {
@@ -20,6 +21,8 @@ class VibeControllers {
                 })
             )
         }
+
+        await Redis.setVibes(payload)
 
         return res.status(200).json(
             new ResponseDTO<VibeWithDetailType>({
@@ -107,6 +110,9 @@ class VibeControllers {
                 })
             )
         }
+
+        // to make sure getAllVibes request gets the latest vibes data
+        await Redis.deleteVibes()
 
         return res.status(200).json(
             new ResponseDTO<VibeType>({

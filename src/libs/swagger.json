@@ -39,19 +39,19 @@
                                 "type": "object",
                                 "properties": {
                                     "username": {
-                                        "example": "any"
+                                        "example": "string"
                                     },
                                     "email": {
-                                        "example": "any"
+                                        "example": "string"
                                     },
                                     "name": {
-                                        "example": "any"
+                                        "example": "string"
                                     },
                                     "password": {
-                                        "example": "any"
+                                        "example": "string"
                                     },
                                     "bio": {
-                                        "example": "any"
+                                        "example": "string"
                                     }
                                 }
                             }
@@ -78,10 +78,10 @@
                                 "type": "object",
                                 "properties": {
                                     "username": {
-                                        "example": "any"
+                                        "example": "string"
                                     },
                                     "password": {
-                                        "example": "any"
+                                        "example": "string"
                                     }
                                 }
                             }
@@ -108,7 +108,7 @@
                                 "type": "object",
                                 "properties": {
                                     "email": {
-                                        "example": "any"
+                                        "example": "string"
                                     }
                                 }
                             }
@@ -135,7 +135,7 @@
                                 "type": "object",
                                 "properties": {
                                     "password": {
-                                        "example": "any"
+                                        "example": "string"
                                     }
                                 }
                             }
@@ -173,7 +173,7 @@
                                 "type": "object",
                                 "properties": {
                                     "content": {
-                                        "example": "any"
+                                        "example": "string"
                                     }
                                 }
                             }
@@ -338,7 +338,7 @@
                                 "type": "object",
                                 "properties": {
                                     "targetId": {
-                                        "example": "any"
+                                        "example": "number"
                                     }
                                 }
                             }
@@ -414,13 +414,13 @@
                                 "type": "object",
                                 "properties": {
                                     "username": {
-                                        "example": "any"
+                                        "example": "string"
                                     },
                                     "name": {
-                                        "example": "any"
+                                        "example": "string"
                                     },
                                     "bio": {
-                                        "example": "any"
+                                        "example": "string"
                                     }
                                 }
                             }
@@ -470,10 +470,10 @@
                                 "type": "object",
                                 "properties": {
                                     "content": {
-                                        "example": "any"
+                                        "example": "string"
                                     },
                                     "targetId": {
-                                        "example": "any"
+                                        "example": "number"
                                     }
                                 }
                             }
