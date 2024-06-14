@@ -13,5 +13,6 @@ export const LOCALHOST = process.env.LOCALHOST
 export const PORT = process.env.PORT
 export const SECRET_SAUCE = process.env.SECRET_SAUCE
 export const SALT_ROUND = process.env.SALT_ROUND
+export const REDIS_URL = process.env.REDIS_URL
 
 export { cloudinary }
