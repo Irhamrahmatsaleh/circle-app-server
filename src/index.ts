@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { PORT } from './configs/config'
+import { initRedis } from './libs/redis'
 import express from 'express'
 import cors from 'cors'
 import swaggerUI from 'swagger-ui-express'
@@ -13,6 +14,7 @@ import UserControllers from './controllers/UserControllers'
 import FollowControllers from './controllers/FollowControllers'
 import authenticate from './middlewares/authenticate'
 import uploader from './middlewares/upload'
+import Redis from './middlewares/redis'
 
 const prisma = new PrismaClient()
 
@@ -51,7 +53,7 @@ async function main() {
     v1MainRouter.post('/auth/forgot', AuthControllers.forgotPassword)
     v1MainRouter.patch('/auth/reset', authenticate, AuthControllers.resetPassword)
 
-    v1MainRouter.get('/vibes', authenticate, VibeControllers.getVibes)
+    v1MainRouter.get('/vibes', authenticate, Redis.getVibes, VibeControllers.getVibes)
     v1MainRouter.get('/vibes/:id', authenticate, VibeControllers.getVibe)
     v1MainRouter.get('/vibes/user/:id', authenticate, VibeControllers.getUserVibes)
     v1MainRouter.post('/vibes', uploader.single('image'), authenticate, VibeControllers.postVibes)
@@ -86,12 +88,14 @@ async function main() {
     })
 }
 
-main()
-    .then(async () => {
-        await prisma.$disconnect()
-    })
-    .catch(async (e) => {
-        console.error(e)
-        await prisma.$disconnect()
-        process.exit(1)
-    })
+initRedis().then(() => {
+    main()
+        .then(async () => {
+            await prisma.$disconnect()
+        })
+        .catch(async (e) => {
+            console.error(e)
+            await prisma.$disconnect()
+            process.exit(1)
+        })
+})
