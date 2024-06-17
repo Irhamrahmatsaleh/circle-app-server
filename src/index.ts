@@ -22,16 +22,16 @@ import Redis from './middlewares/redis'
 const prisma = new PrismaClient()
 
 const app = express()
-const v1MainRouter = express.Router()
+const AppV1 = express.Router()
 const port = PORT
 
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use('/v1', v1MainRouter)
+app.use('/v1', AppV1)
 
-v1MainRouter.use('/', swaggerUI.serve)
-v1MainRouter.get(
+AppV1.use('/', swaggerUI.serve)
+AppV1.get(
     '/',
     swaggerUI.setup(swaggerDoc, {
         customSiteTitle: 'Circle App API',
@@ -51,9 +51,9 @@ v1MainRouter.get(
 )
 
 async function main() {
-    v1MainRouter.use(
+    AppV1.use(
         rateLimit({
-            windowMs: 15 * 60 * 1000, // 15 mins
+            windowMs: 15 * 60 * 1000, // reset every 15 mins
             limit: 100,
             standardHeaders: 'draft-7',
             legacyHeaders: false,
@@ -65,40 +65,30 @@ async function main() {
         })
     )
 
-    v1MainRouter.post('/register', AuthControllers.register)
-    v1MainRouter.post('/login', AuthControllers.login)
-    v1MainRouter.post('/auth/forgot', AuthControllers.forgotPassword)
-    v1MainRouter.patch('/auth/reset', authenticate, AuthControllers.resetPassword)
+    AppV1.post('/register', AuthControllers.register)
+    AppV1.post('/login', AuthControllers.login)
+    AppV1.post('/auth/forgot', AuthControllers.forgotPassword)
+    AppV1.patch('/auth/reset', authenticate, AuthControllers.resetPassword)
 
-    v1MainRouter.get('/vibes', authenticate, Redis.getVibes, VibeControllers.getVibes)
-    v1MainRouter.get('/vibes/:id', authenticate, VibeControllers.getVibe)
-    v1MainRouter.get('/vibes/user/:id', authenticate, VibeControllers.getUserVibes)
-    v1MainRouter.post('/vibes', uploader.single('image'), authenticate, VibeControllers.postVibes)
-    v1MainRouter.delete('/vibes/:id', authenticate, VibeControllers.deleteVibe)
+    AppV1.get('/vibes', authenticate, Redis.getVibes, VibeControllers.getVibes)
+    AppV1.get('/vibes/:id', authenticate, VibeControllers.getVibe)
+    AppV1.get('/vibes/user/:id', authenticate, VibeControllers.getUserVibes)
+    AppV1.post('/vibes', uploader.single('image'), authenticate, VibeControllers.postVibes)
+    AppV1.delete('/vibes/:id', authenticate, VibeControllers.deleteVibe)
 
-    v1MainRouter.get('/follow/:id', authenticate, FollowControllers.follow)
-    v1MainRouter.get('/unfollow/:id', authenticate, FollowControllers.unfollow)
+    AppV1.get('/follow/:id', authenticate, FollowControllers.follow)
+    AppV1.get('/unfollow/:id', authenticate, FollowControllers.unfollow)
 
-    v1MainRouter.get('/find', authenticate, UserControllers.searchUser)
-    v1MainRouter.post('/likes', authenticate, LikeControllers.likeMechanism)
-    v1MainRouter.get('/me', authenticate, UserControllers.getLoggedUser)
+    AppV1.get('/find', authenticate, UserControllers.searchUser)
+    AppV1.post('/likes', authenticate, LikeControllers.likeMechanism)
+    AppV1.get('/me', authenticate, UserControllers.getLoggedUser)
 
-    v1MainRouter.get('/users/:id', authenticate, UserControllers.getUser)
-    v1MainRouter.get('/users', authenticate, UserControllers.getUsers)
-    v1MainRouter.patch(
-        '/users/me',
-        uploader.single('avatar'),
-        authenticate,
-        UserControllers.editUser
-    )
+    AppV1.get('/users/:id', authenticate, UserControllers.getUser)
+    AppV1.get('/users', authenticate, UserControllers.getUsers)
+    AppV1.patch('/users/me', uploader.single('avatar'), authenticate, UserControllers.editUser)
 
-    v1MainRouter.delete('/replies/:id', authenticate, ReplyControllers.deleteReply)
-    v1MainRouter.post(
-        '/replies',
-        uploader.single('image'),
-        authenticate,
-        ReplyControllers.postReply
-    )
+    AppV1.delete('/replies/:id', authenticate, ReplyControllers.deleteReply)
+    AppV1.post('/replies', uploader.single('image'), authenticate, ReplyControllers.postReply)
 
     app.listen(port, () => {
         console.log(`App is listening on port ${port}`)

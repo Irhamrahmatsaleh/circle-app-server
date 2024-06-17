@@ -11,7 +11,7 @@ class Redis {
 
         if (vibes) {
             return res.status(200).json(
-                new ResponseDTO<VibeWithDetailType>({
+                new ResponseDTO<VibeWithDetailType[]>({
                     error: false,
                     message: {
                         status: 'Vibes retrieved!',

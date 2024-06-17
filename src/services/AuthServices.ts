@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from '@prisma/client'
 import { UserType } from '../types/types'
-import { SECRET_SAUCE } from '../configs/config'
+import { CLIENT, SECRET_SAUCE } from '../configs/config'
 import jwt from 'jsonwebtoken'
 import RegisterDTO from '../dtos/RegisterDTO'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
@@ -16,6 +16,7 @@ import {
     resetPasswordSchema,
 } from '../validators/validators'
 import primsaErrorHandler from '../utils/PrismaError'
+import { sendMail } from '../libs/mailer'
 
 const prisma = new PrismaClient()
 
@@ -125,6 +126,16 @@ class AuthServices {
 
             delete requestedUser.password
             const token = jwt.sign(requestedUser, SECRET_SAUCE)
+
+            await sendMail({
+                to: 'arrdix.second@gmail.com',
+                subject: '[Circle App] Reset Password',
+                name: requestedUser.name,
+                header: 'Plase click button below to reset your password and please do not share this email to anyone, including people claiming from Circle App.',
+                footer: 'This email message was auto-generated. Please do not respond. If you need additional help, please visit Circle App Support.',
+                CTA: 'Reset Password',
+                link: `${CLIENT}/help/reset/${token}`,
+            })
 
             return new ServiceResponseDTO<string>({
                 error: false,
