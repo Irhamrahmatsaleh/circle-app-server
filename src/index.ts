@@ -54,7 +54,7 @@ async function main() {
     AppV1.use(
         rateLimit({
             windowMs: 15 * 60 * 1000, // reset every 15 mins
-            limit: 100,
+            limit: 499,
             standardHeaders: 'draft-7',
             legacyHeaders: false,
             store: new RedisStore({
