@@ -19,7 +19,7 @@ export async function sendMail(payload: sendMailParams) {
     const headerPath = path.join(__dirname, '../public/header.jpg')
     const header = fs.readFileSync(headerPath)
 
-    const templatePath = path.join(__dirname, '../utils/mail-template.html')
+    const templatePath = path.join(__dirname, '../templates/mail-template.html')
     const template = fs.readFileSync(templatePath, 'utf8')
 
     const transporter = nodemailer.createTransport({
