@@ -3,6 +3,7 @@ import { ReplyType } from '../types/types'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import ReplyServices from '../services/ReplyServices'
 import ResponseDTO from '../dtos/ResponseDTO'
+import Redis from '../middlewares/redis'
 
 class ReplyControllers {
     async postReply(req: Request, res: Response) {
@@ -25,6 +26,9 @@ class ReplyControllers {
                 })
             )
         }
+
+        // to make sure getAllVibes request gets the latest vibes data
+        await Redis.deleteVibes()
 
         return res.status(200).json(
             new ResponseDTO<ReplyType>({
