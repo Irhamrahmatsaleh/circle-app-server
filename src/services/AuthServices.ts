@@ -128,7 +128,7 @@ class AuthServices {
             const token = jwt.sign(requestedUser, SECRET_SAUCE)
 
             await sendMail({
-                to: 'arrdix.second@gmail.com',
+                to: requestedUser.email,
                 subject: '[Circle App] Reset Password',
                 name: requestedUser.name,
                 header: 'Plase click button below to reset your password and please do not share this email to anyone, including people claiming from Circle App.',
