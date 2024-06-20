@@ -3,6 +3,7 @@ import { LikeType } from '../types/types'
 import LikeServices from '../services/LikeServices'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import ResponseDTO from '../dtos/ResponseDTO'
+import Redis from '../middlewares/redis'
 
 class LikeControllers {
     async likeMechanism(req: Request, res: Response) {
@@ -23,6 +24,9 @@ class LikeControllers {
                 })
             )
         }
+
+        // to make sure getAllVibes request gets the latest vibes data
+        await Redis.deleteVibes()
 
         return res.status(200).json(
             new ResponseDTO<LikeType>({
