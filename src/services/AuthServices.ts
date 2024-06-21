@@ -26,6 +26,7 @@ class AuthServices {
             const { error } = registerSchema.validate(registerDTO)
 
             if (error) {
+                console.log(error)
                 throw new CircleError({ error: error.details[0].message })
             }
 

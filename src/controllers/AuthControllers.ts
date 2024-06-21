@@ -8,7 +8,8 @@ class AuthControllers {
     async register(req: Request, res: Response) {
         const avatar =
             'https://api.dicebear.com/8.x/thumbs/svg?seed=Lucy&backgroundColor=f1f4dc&translateX=-5&shapeColor=f1f4dc'
-        const banner = 'https://placehold.co/600x400/000000/FFFFFF/png'
+        const banner =
+            'https://api.dicebear.com/9.x/thumbs/svg?seed=Bandit&backgroundColor=f1f4dc&eyesColor=transparent&mouthColor=transparent'
         const { username, email, name, password, bio } = req.body
 
         const { error, payload }: ServiceResponseDTO<UserType> = await AuthServices.register({
