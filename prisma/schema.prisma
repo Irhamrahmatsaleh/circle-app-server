@@ -14,6 +14,7 @@ model User {
   name          String
   password      String
   avatar        String?
+  banner        String?
   bio           String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -34,7 +35,7 @@ model Vibe {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  author        User      @relation(fields: [authorId], references: [id], name: "UserVibes")
+  author        User      @relation(fields: [authorId], references: [id], name: "UserVibes",  onDelete: Cascade)
   authorId      Int
 
   replies       Reply[]   @relation("VibeReplies")
@@ -50,9 +51,9 @@ model Reply {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  repliedBy   User      @relation(fields: [authorId], references: [id], name: "UserReplies")
+  repliedBy   User      @relation(fields: [authorId], references: [id], name: "UserReplies", onDelete: Cascade)
   authorId    Int
-  repliedTo   Vibe      @relation(fields: [targetId], references: [id], name: "VibeReplies")
+  repliedTo   Vibe      @relation(fields: [targetId], references: [id], name: "VibeReplies", onDelete: Cascade)
   targetId    Int
 
   @@map("replies")
@@ -63,9 +64,9 @@ model Like {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
-  likedBy     User      @relation(fields: [authorId], references: [id], name: "UserLikes")
+  likedBy     User      @relation(fields: [authorId], references: [id], name: "UserLikes", onDelete: Cascade)
   authorId    Int
-  likedOn     Vibe      @relation(fields: [targetId], references: [id], name: "VibeLikes")
+  likedOn     Vibe      @relation(fields: [targetId], references: [id], name: "VibeLikes", onDelete: Cascade)
   targetId    Int
 
   @@map("likes")
@@ -76,9 +77,9 @@ model Follow {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  following     User      @relation(fields: [targetId], references: [id], name: "UserFollowers")
+  following     User      @relation(fields: [targetId], references: [id], name: "UserFollowers", onDelete: Cascade)
   targetId      Int
-  followOwner   User      @relation(fields: [ownerId], references: [id], name: "UserFollowing")
+  followOwner   User      @relation(fields: [ownerId], references: [id], name: "UserFollowing", onDelete: Cascade)
   ownerId       Int
 
   @@map("follows")

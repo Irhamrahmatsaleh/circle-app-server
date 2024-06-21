@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { UserType } from '../types/types'
+import { UploadType, UserType } from '../types/types'
 import UserServices from '../services/UserServices'
 import ServiceResponseDTO from '../dtos/ServiceResponseDTO'
 import ResponseDTO from '../dtos/ResponseDTO'
@@ -90,7 +90,11 @@ class UserControllers {
 
     async editUser(req: Request, res: Response) {
         const loggedUser = res.locals.user
-        const avatar = req.file?.path
+
+        const files = req.files as UploadType
+        const avatar = files.avatar[0].path
+        const banner = files.banner[0].path
+
         const { username, name, bio } = req.body
 
         const { error, payload }: ServiceResponseDTO<UserType> = await UserServices.editUser({
@@ -98,6 +102,7 @@ class UserControllers {
             username,
             name,
             avatar,
+            banner,
             bio,
         })
 

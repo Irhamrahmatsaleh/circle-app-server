@@ -5,6 +5,7 @@ export interface UserType {
     name: string
     password?: string
     avatar: string
+    banner: string
     bio: string
     createdAt: Date
     updatedAt: Date
@@ -64,4 +65,21 @@ export interface VibeWithDetailType extends VibeType {
     totalLikes?: number
     isLiked?: boolean
     author?: UserType
+}
+
+export interface MulterFileType {
+    fieldname: string
+    originalname: string
+    encoding: string
+    mimetype: string
+    size: number
+    destination: string
+    filename: string
+    path: string
+    buffer: Buffer
+}
+
+export interface UploadType {
+    avatar?: MulterFileType[]
+    banner?: MulterFileType[]
 }

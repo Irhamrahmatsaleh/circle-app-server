@@ -260,6 +260,7 @@ class UserServices {
             username: newData.username || existingData.username,
             name: newData.name || existingData.name,
             avatar: newData.avatar || existingData.avatar,
+            banner: newData.banner || existingData.banner,
             bio: newData.bio || existingData.bio,
         })
     }

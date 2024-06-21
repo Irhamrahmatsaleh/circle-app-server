@@ -6,6 +6,7 @@ const registerSchema = Joi.object({
     name: Joi.string().min(4).required(),
     password: Joi.string().min(4).required(),
     avatar: Joi.string().uri().allow(null),
+    banner: Joi.string().uri().allow(null),
     bio: Joi.string().max(255).allow(null),
 })
 
@@ -41,6 +42,7 @@ const userSchema = Joi.object({
     username: Joi.string().min(4).max(255).required(),
     name: Joi.string().min(4).required(),
     avatar: Joi.string().uri().allow(null),
+    banner: Joi.string().uri().allow(null),
     bio: Joi.string().max(255).allow(null).optional().min(0),
 })
 
