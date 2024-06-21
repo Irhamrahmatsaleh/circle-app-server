@@ -27,12 +27,14 @@ const resetPasswordSchema = Joi.object({
 const vibeSchema = Joi.object({
     content: Joi.string().max(255).required(),
     image: Joi.string().uri().allow(null),
+    badLabels: Joi.array().items(Joi.string()),
     authorId: Joi.number().required(),
 })
 
 const replySchema = Joi.object({
     content: Joi.string().max(255).required(),
     image: Joi.string().uri().allow(null),
+    badLabels: Joi.array().items(Joi.string()),
     authorId: Joi.number().required(),
     targetId: Joi.number().required(),
 })
