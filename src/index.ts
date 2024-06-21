@@ -85,7 +85,15 @@ async function main() {
 
     AppV1.get('/users/:id', authenticate, UserControllers.getUser)
     AppV1.get('/users', authenticate, UserControllers.getUsers)
-    AppV1.patch('/users/me', uploader.single('avatar'), authenticate, UserControllers.editUser)
+    AppV1.patch(
+        '/users/me',
+        uploader.fields([
+            { name: 'avatar', maxCount: 1 },
+            { name: 'banner', maxCount: 1 },
+        ]),
+        authenticate,
+        UserControllers.editUser
+    )
 
     AppV1.delete('/replies/:id', authenticate, ReplyControllers.deleteReply)
     AppV1.post('/replies', uploader.single('image'), authenticate, ReplyControllers.postReply)
