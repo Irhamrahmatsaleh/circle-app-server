@@ -10,6 +10,7 @@ export interface UserType {
     createdAt: Date
     updatedAt: Date
     isFollowed?: boolean
+    filterContent: boolean
 }
 
 export interface VibeType {
@@ -19,6 +20,7 @@ export interface VibeType {
     createdAt: Date
     updatedAt: Date
     authorId: number
+    badLabels: string[]
 }
 
 export interface ReplyType {
@@ -29,6 +31,7 @@ export interface ReplyType {
     targetId: number
     createdAt: Date
     updatedAt: Date
+    badLabels: string[]
 }
 
 export interface LikeType {

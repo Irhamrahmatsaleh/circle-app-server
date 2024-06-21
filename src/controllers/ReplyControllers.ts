@@ -9,10 +9,11 @@ class ReplyControllers {
     async postReply(req: Request, res: Response) {
         const loggedUser = res.locals.user
         const image = req.file?.path
-        const { content, targetId } = req.body
+        const { content, badLabels, targetId } = req.body
         const { error, payload }: ServiceResponseDTO<ReplyType> = await ReplyServices.postReply({
             image,
             content,
+            badLabels: JSON.parse(badLabels),
             targetId: +targetId,
             authorId: loggedUser.id,
         })
