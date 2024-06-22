@@ -12,19 +12,51 @@ const prisma = new PrismaClient()
 class UserServices {
     async getUser(id: number, loggedUser: UserType): Promise<ServiceResponseDTO<UserType>> {
         try {
-            const user: UserWithDetailype = await prisma.user.findUnique({
+            const rawUser: UserWithDetailype = await prisma.user.findUnique({
                 where: {
                     id: id,
                 },
                 include: {
                     followers: true,
+                    followings: true,
+                    vibes: {
+                        include: {
+                            replies: true,
+                            likes: true,
+                        },
+                    },
                 },
             })
 
-            user.isFollowed = user.followers.some((follower) => follower.ownerId === loggedUser.id)
+            const user = {
+                ...rawUser,
+                totalFollower: rawUser.followers.length,
+                totalFollowing: rawUser.followings.length,
+                isFollowed: rawUser.followers.some(
+                    (follower) => follower.ownerId === loggedUser.id
+                ),
+                vibes: rawUser.vibes.map((vibe) => {
+                    const replies = vibe.replies
+                    const likes = vibe.likes
+
+                    delete vibe.createdAt
+                    delete vibe.replies
+                    delete vibe.likes
+
+                    delete loggedUser.createdAt
+                    delete loggedUser.updatedAt
+
+                    return {
+                        ...vibe,
+                        author: rawUser,
+                        totalReplies: replies.length,
+                        totalLikes: likes.length,
+                        isLiked: likes.some((like) => like.authorId === loggedUser.id),
+                    }
+                }),
+            }
 
             delete user.password
-            delete user.followers
             delete user.createdAt
             delete user.updatedAt
 
@@ -259,6 +291,7 @@ class UserServices {
             id: newData.id,
             username: newData.username || existingData.username,
             name: newData.name || existingData.name,
+            filterContent: newData.filterContent,
             avatar: newData.avatar || existingData.avatar,
             banner: newData.banner || existingData.banner,
             bio: newData.bio || existingData.bio,
