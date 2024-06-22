@@ -43,6 +43,7 @@ const userSchema = Joi.object({
     id: Joi.number().required(),
     username: Joi.string().min(4).max(255).required(),
     name: Joi.string().min(4).required(),
+    filterContent: Joi.boolean(),
     avatar: Joi.string().uri().allow(null),
     banner: Joi.string().uri().allow(null),
     bio: Joi.string().max(255).allow(null).optional().min(0),

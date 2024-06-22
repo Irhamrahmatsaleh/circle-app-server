@@ -95,12 +95,13 @@ class UserControllers {
         const avatar = files.avatar ? files.avatar[0].path : null
         const banner = files.banner ? files.banner[0].path : null
 
-        const { username, name, bio } = req.body
+        const { username, name, filterContent, bio } = req.body
 
         const { error, payload }: ServiceResponseDTO<UserType> = await UserServices.editUser({
             id: loggedUser.id,
             username,
             name,
+            filterContent: JSON.parse(filterContent),
             avatar,
             banner,
             bio,
