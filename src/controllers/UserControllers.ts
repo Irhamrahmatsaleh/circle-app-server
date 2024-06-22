@@ -92,8 +92,8 @@ class UserControllers {
         const loggedUser = res.locals.user
 
         const files = req.files as UploadType
-        const avatar = files.avatar[0].path
-        const banner = files.banner[0].path
+        const avatar = files.avatar ? files.avatar[0].path : null
+        const banner = files.banner ? files.banner[0].path : null
 
         const { username, name, bio } = req.body
 
