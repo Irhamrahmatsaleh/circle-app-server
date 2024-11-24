@@ -25,7 +25,12 @@ const app = express()
 const AppV1 = express.Router()
 const port = PORT
 
-app.use(cors())
+// app.use(cors())
+app.use(Cors({
+    origin: ['https://circle-app-roan.vercel.app', 'http://localhost:5173'], // Ganti dengan domain frontend Anda
+    methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    credentials: true,
+}));
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/v1', AppV1)
